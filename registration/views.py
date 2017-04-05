@@ -4,16 +4,16 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
-from django.shortcuts import redirect
-from .forms import UserCreationForm
+from django.shortcuts import redirect, render
+from .forms import RegisterForm, LoginForm
 from .tokens import account_activation_token
 
 
-class IndexView(FormView):
-    template_name = 'registration/index.html'
-    form_class = UserCreationForm
+class RegisterView(FormView):
+    template_name = 'registration/register.html'
+    form_class = RegisterForm
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -23,7 +23,7 @@ class IndexView(FormView):
         site = get_current_site(self.request)
         subject = 'Activate account'
         message = \
-            render_to_string('registration/account_activation_email.html', {
+            render_to_string('registration/confirm_email_message.html', {
                 'username': user.username,
                 'domain': site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -34,7 +34,7 @@ class IndexView(FormView):
         return redirect('register')
 
 
-class ActivateAccountView(View):
+class ConfirmEmailView(View):
     def get(self, request, uidb64, token):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
@@ -44,8 +44,26 @@ class ActivateAccountView(View):
 
         if user is not None and \
                 account_activation_token.check_token(user, token):
+                    user.is_active = True
                     user.profile.email_confirmed = True
                     user.save()
                     login(request, user)
-                    return redirect('register')
+                    return redirect('login')
         return redirect('register')
+
+
+class LoginView(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'registration/login.html', {'form': form})
+
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+
+            return redirect('index')
+        return redirect('index')

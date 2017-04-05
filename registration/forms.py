@@ -1,10 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
 
 
-class UserRegistrationForm(UserCreationForm):
+class RegisterForm(UserCreationForm):
     email = \
         forms.EmailField(max_length=256,
                          help_text='Required. Enter a valid email address.')
@@ -14,7 +13,6 @@ class UserRegistrationForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
 
-class ProfileRegistrationForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        exclude = ('email_confirmed',)
+class LoginForm(forms.Form):
+    username = forms.CharField(label="Username")
+    password = forms.CharField(label="Password", widget=forms.PasswordInput)
