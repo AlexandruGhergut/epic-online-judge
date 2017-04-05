@@ -12,7 +12,7 @@ from .tokens import account_activation_token
 
 
 class RegisterView(FormView):
-    template_name = 'registration/register.html'
+    template_name = 'authentication/register.html'
     form_class = RegisterForm
 
     def form_valid(self, form):
@@ -23,7 +23,7 @@ class RegisterView(FormView):
         site = get_current_site(self.request)
         subject = 'Activate account'
         message = \
-            render_to_string('registration/confirm_email_message.html', {
+            render_to_string('authentication/confirm_email_message.html', {
                 'username': user.username,
                 'domain': site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -31,7 +31,7 @@ class RegisterView(FormView):
             })
         user.email_user(subject, message)
 
-        return redirect('register')
+        return redirect('authentication:register')
 
 
 class ConfirmEmailView(View):
@@ -48,14 +48,14 @@ class ConfirmEmailView(View):
                     user.profile.email_confirmed = True
                     user.save()
                     login(request, user)
-                    return redirect('login')
-        return redirect('register')
+                    return redirect('authentication:login')
+        return redirect('authentication:register')
 
 
 class LoginView(View):
     def get(self, request):
         form = LoginForm()
-        return render(request, 'registration/login.html', {'form': form})
+        return render(request, 'authentication/login.html', {'form': form})
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -65,5 +65,5 @@ class LoginView(View):
             user = authenticate(username=username, password=password)
             login(request, user)
 
-            return redirect('index')
-        return redirect('index')
+            return redirect('core:index')
+        return redirect('core:index')
