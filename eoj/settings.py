@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.contrib import messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,8 @@ SECRET_KEY = '6m!#n$bjj!a6)$t&=lumfrdelk2tl=te%eme-d@p4)9d^qrlr#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['epic-onlinejudge.azurewebsites.net',
+                 '127.0.0.1']
 
 
 # Application definition
@@ -128,3 +130,7 @@ STATICFILES_DIRS = [
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_URL = '/login/'
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
