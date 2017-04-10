@@ -68,7 +68,9 @@ class LoginView(View):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
-            login(request, user)
 
-            return redirect('core:index')
-        return redirect('core:index')
+            if user is not None:
+                login(request, user)
+                return redirect('core:index')
+
+        return redirect('authentication:login')
