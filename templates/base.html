@@ -52,9 +52,10 @@
               </form>
               <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                    <li><span class="glyphicon glyphicon-user" aria-hidden="true"></span></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a>
+                    <li><a href="{% url 'authentication:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                 {% else %}
-                    <li><a href="{% url 'authentication:login' %}">Login</a></li>
+                    <li><a href="{% url 'authentication:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                 {% endif %}
               </ul>
             </div><!-- /.navbar-collapse -->

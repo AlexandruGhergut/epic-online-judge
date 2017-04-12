@@ -8,6 +8,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth import logout
 from .forms import RegisterForm, LoginForm
 from .tokens import account_activation_token
 
@@ -49,9 +50,8 @@ class ConfirmEmailView(View):
                     user.profile.email_confirmed = True
                     user.save()
                     login(request, user)
-                    messages.success(request, ('Email confirmed.'
-                                               'You may now log in'))
-                    return redirect('authentication:login')
+                    messages.success(request, ('Email confirmed'))
+                    return redirect('authentication:index')
 
         messages.error(request, 'Invalid token')
         return redirect('authentication:register')
@@ -74,3 +74,9 @@ class LoginView(View):
                 return redirect('core:index')
 
         return redirect('authentication:login')
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('core:index')
