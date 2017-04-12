@@ -29,4 +29,7 @@ class LoginForm(forms.Form):
         if not user.check_password(password):
             raise forms.ValidationError("Wrong password")
 
+        if user.profile.email_confirmed is False:
+            raise forms.ValidationError("Email is not confirmed")
+
         return super(LoginForm, self).clean(*args, **kwargs)
