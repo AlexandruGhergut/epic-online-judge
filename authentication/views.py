@@ -50,7 +50,7 @@ class ConfirmEmailView(View):
                     user.profile.email_confirmed = True
                     user.save()
                     login(request, user)
-                    messages.success(request, ('Email confirmed'))
+                    messages.success(request, 'Email confirmed')
                     return redirect('authentication:index')
 
         messages.error(request, 'Invalid token')
@@ -64,6 +64,7 @@ class LoginView(View):
 
     def post(self, request):
         form = LoginForm(request.POST)
+
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
@@ -73,6 +74,9 @@ class LoginView(View):
                 login(request, user)
                 return redirect('core:index')
 
+        for error_key, errors in form._errors.items():
+            for error in errors:
+                messages.error(request, error)
         return redirect('authentication:login')
 
 

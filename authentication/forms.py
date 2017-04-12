@@ -16,3 +16,17 @@ class RegisterForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField(label="Username")
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
+
+    def clean(self, *args, **kwargs):
+        username = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
+
+        user = User.objects.filter(username=username).first()
+
+        if not user:
+            raise forms.ValidationError("No account with that username exists")
+
+        if not user.check_password(password):
+            raise forms.ValidationError("Wrong password")
+
+        return super(LoginForm, self).clean(*args, **kwargs)
