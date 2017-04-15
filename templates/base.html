@@ -53,7 +53,7 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a>
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
                         <li><a href="{% url 'authentication:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     {% else %}
                         <li {% active_url 'authentication:login' %}>
@@ -71,7 +71,7 @@
 
 
     {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} text-center text-bold"><strong>{{ message }}</strong></div>
+        <div class="alert alert-{{ message.tags }} text-center text-bold"><strong>{{ message }}</strong></div>
     {% endfor %}
 
     <div id="content">

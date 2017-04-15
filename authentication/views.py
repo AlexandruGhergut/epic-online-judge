@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from .forms import RegisterForm, LoginForm
 from .tokens import account_activation_token
+from common import utils
 
 
 class RegisterView(FormView):
@@ -74,9 +75,7 @@ class LoginView(View):
                 login(request, user)
                 return redirect('core:index')
 
-        for error_key, errors in form._errors.items():
-            for error in errors:
-                messages.error(request, error)
+        utils.display_validation_errors(request, form)
         return redirect('authentication:login')
 
 
