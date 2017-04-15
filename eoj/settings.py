@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['epic-onlinejudge.azurewebsites.net',
 # Application definition
 
 INSTALLED_APPS = [
+    'common.apps.CommonConfig',
     'core.apps.CoreConfig',
     'authentication.apps.AuthenticationConfig',
     'django.contrib.admin',
