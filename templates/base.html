@@ -1,4 +1,5 @@
-<!DOCTYPE html> {% load static %}
+<!DOCTYPE html>
+{% load static %}
 <html>
 
 <head>
@@ -9,7 +10,9 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+    {% block head %} {% endblock %}
     <title>{% block title %}Epic Online Judge{% endblock %}</title>
+
     {% load common.tags %}
 </head>
 
@@ -53,8 +56,17 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
-                        <li><a href="{% url 'authentication:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                 {{ user.username }}
+                                <span class="glyphicon glyphicon-chevron-down"></span>
+                             </a>
+                             <ul class="dropdown-menu">
+                                 <li><a href="#"><span class="glyphicon glyphicon-user"></span> Edit profile</a></li>
+                                 <li role="separator" class="divider"></li>
+                                 <li><a href="{% url 'authentication:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                             </ul>
+                         </li>
                     {% else %}
                         <li {% active_url 'authentication:login' %}>
                             <a href="{% url 'authentication:login' %}">
