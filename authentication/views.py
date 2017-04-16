@@ -9,6 +9,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import logout
+
+from oauth2client import client, crypt
+
 from .forms import RegisterForm, LoginForm
 from .tokens import account_activation_token
 from common import utils
@@ -32,6 +35,7 @@ class RegisterView(FormView):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
+        import pdb; pdb.set_trace()
         user.email_user(subject, message)
 
         return redirect('authentication:login')
@@ -52,7 +56,7 @@ class ConfirmEmailView(View):
                     user.save()
                     login(request, user)
                     messages.success(request, 'Email confirmed')
-                    return redirect('authentication:index')
+                    return redirect('core:index')
 
         messages.error(request, 'Invalid token')
         return redirect('authentication:register')
@@ -77,6 +81,24 @@ class LoginView(View):
 
         utils.display_validation_errors(request, form)
         return redirect('authentication:login')
+
+
+class GoogleLoginView(View):
+    def post(self, request):
+        import pdb; pdb.set_trace()
+        token = request.POST.get('idtoken', '')
+        CLIENT_ID = '366014831250-pja5mp5spctso4ij1jidho54ujqcq2h4.apps.googleusercontent.com'
+        try:
+            idinfo = client.verify_id_token(token, CLIENT_ID)
+
+            if idinfo['iss'] not in ['accounts.google.com',
+                                     'https://accounts.google.com']:
+                raise crypt.AppIdentityError("Wrong issuer.")
+        except crypt.AppIdentityError:
+            pass
+        userid = idinfo['sub']
+
+        return redirect('core:index')
 
 
 class LogoutView(View):

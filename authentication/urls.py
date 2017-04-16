@@ -8,5 +8,7 @@ urlpatterns = [
     url(r'^confirm_email/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.ConfirmEmailView.as_view(), name='activate_account'),
     url(r'^login/$', views.LoginView.as_view(), name='login'),
+    url(r'^google_login/$',
+        views.GoogleLoginView.as_view(), name='google_login'),
     url(r'^logout/$', views.LogoutView.as_view(), name='logout')
 ]

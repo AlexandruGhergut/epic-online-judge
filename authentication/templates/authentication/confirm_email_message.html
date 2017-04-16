@@ -3,4 +3,4 @@ Welcome {{ username }},
 
 In order to confirm your registration, please click on the following link
 http://{{ domain }}{% url 'authentication:activate_account' uidb64=uid token=token %}
-{%  endautoescape %}
+{% endautoescape %}

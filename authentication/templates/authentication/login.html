@@ -4,9 +4,18 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'authentication/css/login.css' %}">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="366014831250-pja5mp5spctso4ij1jidho54ujqcq2h4.apps.googleusercontent.com">
+
+    <script>
+        var GOOGLE_LOGIN_URL = "{% url 'authentication:google_login' %}";
+    </script>
+    <script src="{% static 'authentication/js/login.js' %}"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 {% endblock %}
 
 {% block content %}
+    <div class="g-signin2" data-onsuccess="onGoogleSignIn"></div>
     <div class="container">
         <div class ="content">
             {% crispy form %}
