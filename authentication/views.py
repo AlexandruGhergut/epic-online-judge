@@ -14,7 +14,7 @@ from oauth2client import client, crypt
 
 from .forms import RegisterForm, LoginForm
 from .tokens import account_activation_token
-from common import utils
+from common import utils, strings
 
 
 class RegisterView(FormView):
@@ -35,9 +35,8 @@ class RegisterView(FormView):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-        import pdb; pdb.set_trace()
         user.email_user(subject, message)
-
+        messages.info(self.request, strings.REGISTRATION_EMAIL_SENT)
         return redirect('authentication:login')
 
 
@@ -55,10 +54,12 @@ class ConfirmEmailView(View):
                     user.profile.email_confirmed = True
                     user.save()
                     login(request, user)
-                    messages.success(request, 'Email confirmed')
+                    messages.success(request,
+                                     strings.REGISTRATION_EMAIL_CONFIRMED)
                     return redirect('core:index')
 
-        messages.error(request, 'Invalid token')
+        messages.error(request,
+                       strings.REGISTRATION_CONFIRMATION_TOKEN_INVALID)
         return redirect('authentication:register')
 
 
