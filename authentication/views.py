@@ -73,7 +73,7 @@ class LoginView(View):
         form = LoginForm(request.POST)
 
         if form.is_valid():
-            username = form.cleaned_data['username']
+            username = form.cleaned_data['username_or_email']
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
 

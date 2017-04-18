@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.db.models import Q
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, Div, HTML, ButtonHolder
 
@@ -19,7 +20,7 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label="Username")
+    username_or_email = forms.CharField(label="Username/Email")
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
@@ -31,7 +32,7 @@ class LoginForm(forms.Form):
         self.helper.layout = Layout(
             Div(
                 Field(
-                    'username',
+                    'username_or_email',
                     css_class='form-control',
                     ),
                 css_class='form-group'
@@ -45,7 +46,8 @@ class LoginForm(forms.Form):
                 css_class='form-group'
             ),
             Div(
-                HTML('<a href="{% url \'authentication:register\' %}">Don\'t have an account? Create one</a>'),
+                HTML('<a href="{% url \'authentication:register\' %}">Don\'t '
+                     'have an account? Create one</a>'),
                 css_class='form-group'
                 ),
             Div(
@@ -57,18 +59,20 @@ class LoginForm(forms.Form):
         )
 
     def clean(self, *args, **kwargs):
-        username = self.cleaned_data.get("username")
+        username_or_email = self.cleaned_data.get("username_or_email")
         password = self.cleaned_data.get("password")
 
-        user = User.objects.filter(username=username).first()
+        user = User.objects.filter(Q(username=username_or_email) |
+                                   Q(email=username_or_email)).first()
 
         if not user:
-            raise forms.ValidationError("No account with that username exists")
+            raise forms.ValidationError('No account with that '
+                                        'username/email exists')
 
         if not user.check_password(password):
-            raise forms.ValidationError("Wrong password")
+            raise forms.ValidationError('Wrong password')
 
         if user.profile.email_confirmed is False:
-            raise forms.ValidationError("Email is not confirmed")
+            raise forms.ValidationError('Email is not confirmed')
 
         return super(LoginForm, self).clean(*args, **kwargs)
