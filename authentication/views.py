@@ -5,16 +5,17 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import logout, get_user_model
 
 from oauth2client import client, crypt
 
 from .forms import RegisterForm, LoginForm
 from .tokens import account_activation_token
 from common import utils, strings
+
+User = get_user_model()
 
 
 class RegisterView(FormView):
