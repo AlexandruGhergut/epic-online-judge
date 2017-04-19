@@ -9,3 +9,5 @@ PASSWORD_RESET_EMAIL_SENT = ('An email has been sent to you. '
 PASSWORD_RESET_TOKEN_INVALID =\
     'Invalid token. It may have already been used or expired'
 PASSWORD_RESET_SUCCESSFULL = 'Password changed successfully'
+
+AUTH_TOKEN_INVALID = 'Invalid token'

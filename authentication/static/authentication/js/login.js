@@ -23,6 +23,7 @@ function onGoogleSignIn(googleUser) {
     xhr.setRequestHeader('X-CSRFToken', csrftoken);
     xhr.onload = function() {
       console.log('Signed in as: ' + xhr.responseText);
+      window.location.href = '/';
     };
     xhr.send('idtoken=' + id_token);
 }

@@ -5,7 +5,8 @@ from django.urls import reverse
 from django.db.models import Q
 from django.contrib.auth.forms import SetPasswordForm
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Field, Div, HTML, ButtonHolder
+from crispy_forms.layout import (Submit, Layout, Field, Div, HTML,
+                                 ButtonHolder, Fieldset)
 
 User = get_user_model()
 
@@ -91,20 +92,22 @@ class UsernameOrEmailForm(forms.Form):
         self.helper.form_method = 'post'
         self.helper.form_action = reverse('authentication:reset_password')
         self.helper.layout = Layout(
-            Div(
-                Field(
-                    'username_or_email',
-                    css_class='form-control',
-                    ),
-                css_class='form-group'
-                ),
-            Div(
-                ButtonHolder(
-                    Submit('submit', 'Submit'),
-                ),
-                css_class='form-group',
-                ),
-            )
+            Fieldset('Password recovery',
+                     Div(
+                        Field(
+                            'username_or_email',
+                            css_class='form-control',
+                            ),
+                        css_class='form-group'
+                        ),
+                     Div(
+                        ButtonHolder(
+                            Submit('submit', 'Submit'),
+                        ),
+                        css_class='form-group',
+                        ),
+                     )
+                )
 
     def clean(self, *args, **kwargs):
         username_or_email = self.cleaned_data.get('username_or_email')

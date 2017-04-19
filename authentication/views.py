@@ -6,11 +6,12 @@ from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect, render
+from django.urls import resolve
 from django.contrib import messages
 from django.contrib.auth import logout, get_user_model
 from django.db.models import Q
-from oauth2client import client, crypt
-
+from django.conf import settings
+from django.http.response import HttpResponseRedirect
 from .forms import (RegisterForm, LoginForm, UsernameOrEmailForm,
                     ChangePasswordForm)
 from .tokens import account_activation_token, password_reset_token
@@ -68,7 +69,8 @@ class ConfirmEmailView(View):
 class LoginView(View):
     def get(self, request):
         form = LoginForm()
-        return render(request, 'authentication/login.html', {'form': form})
+        context = {'form': form, 'GOOGLE_CLIENT_ID': settings.GOOGLE_CLIENT_ID}
+        return render(request, 'authentication/login.html', context)
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -88,20 +90,14 @@ class LoginView(View):
 
 class GoogleLoginView(View):
     def post(self, request):
-        import pdb; pdb.set_trace()
         token = request.POST.get('idtoken', '')
-        CLIENT_ID = '366014831250-pja5mp5spctso4ij1jidho54ujqcq2h4.apps.googleusercontent.com'
-        try:
-            idinfo = client.verify_id_token(token, CLIENT_ID)
+        user = authenticate(token=token)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(resolve('core:index'))
 
-            if idinfo['iss'] not in ['accounts.google.com',
-                                     'https://accounts.google.com']:
-                raise crypt.AppIdentityError("Wrong issuer.")
-        except crypt.AppIdentityError:
-            pass
-        userid = idinfo['sub']
-
-        return redirect('core:index')
+        messages.error(request, strings.AUTH_TOKEN_INVALID)
+        return redirect('authentication:login')
 
 
 class LogoutView(View):

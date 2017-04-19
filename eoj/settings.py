@@ -148,4 +148,6 @@ MESSAGE_TAGS = {
 }
 
 AUTH_USER_MODEL = 'authentication.User'
-AUTHENTICATION_BACKENDS = ['authentication.backends.EmailOrUsernameBackend']
+AUTHENTICATION_BACKENDS = ['authentication.backends.EmailOrUsernameBackend',
+                           'authentication.backends.GoogleSignInBackend']
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
