@@ -8,11 +8,12 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import logout, get_user_model
-
+from django.db.models import Q
 from oauth2client import client, crypt
 
-from .forms import RegisterForm, LoginForm
-from .tokens import account_activation_token
+from .forms import (RegisterForm, LoginForm, UsernameOrEmailForm,
+                    ChangePasswordForm)
+from .tokens import account_activation_token, password_reset_token
 from common import utils, strings
 
 User = get_user_model()
@@ -107,3 +108,75 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('core:index')
+
+
+# This view is used to file a request for password change
+class RequestPasswordResetView(View):
+    def get(self, request):
+        form = UsernameOrEmailForm()
+        return render(request, 'authentication/request_password_reset.html',
+                      {'form': form})
+
+    def post(self, request):
+        form = UsernameOrEmailForm(request.POST)
+
+        if form.is_valid():
+            username_or_email = form.cleaned_data['username_or_email']
+            user = User.objects.filter(Q(username=username_or_email) |
+                                       Q(email=username_or_email)).first()
+
+            site = get_current_site(self.request)
+            subject = 'Reset your password'
+            message_template = 'authentication/reset_password_message.html'
+            message = \
+                render_to_string(message_template, {
+                    'username': user.username,
+                    'domain': site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': password_reset_token.make_token(user),
+                })
+            user.email_user(subject, message)
+            messages.success(request, strings.PASSWORD_RESET_EMAIL_SENT)
+            return redirect('authentication:login')
+
+        utils.display_validation_errors(request, form)
+        return redirect('authentication:login')
+
+
+class ChangePasswordView(View):
+    def __get_user_by_token(self, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        return user
+
+    def get(self, request, uidb64, token):
+        template_name = 'authentication/request_password_reset.html'
+
+        user = self.__get_user_by_token(uidb64, token)
+        if user is not None and password_reset_token.check_token(user, token):
+            form = ChangePasswordForm(user, uidb64=uidb64, token=token)
+            return render(request, template_name, {'form': form})
+
+        messages.error(request, strings.PASSWORD_RESET_TOKEN_INVALID)
+        return redirect('authentication:login')
+
+    def post(self, request, uidb64, token):
+        user = self.__get_user_by_token(uidb64, token)
+        if user is not None and password_reset_token.check_token(user, token):
+            form = ChangePasswordForm(user, request.POST, uidb64=uidb64,
+                                      token=token)
+            if form.is_valid():
+                form.save()
+                messages.success(request, strings.PASSWORD_RESET_SUCCESSFULL)
+                return redirect('authentication:login')
+            else:
+                utils.display_validation_errors(request, form)
+                return redirect('authentication:change_password',
+                                uidb64=uidb64, token=token)
+        else:
+            messages.error(request, strings.PASSWORD_RESET_TOKEN_INVALID)
+            return redirect('authentication:login')
