@@ -24,6 +24,11 @@ class RegisterView(FormView):
     template_name = 'authentication/register.html'
     form_class = RegisterForm
 
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('core:index')
+        return super(RegisterView, self).dispatch(*args, **kwargs)
+
     def form_valid(self, form):
         user = form.save(commit=False)
         user.is_active = False
@@ -44,6 +49,11 @@ class RegisterView(FormView):
 
 
 class ConfirmEmailView(View):
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('core:index')
+        return super(ConfirmEmailView, self).dispatch(*args, **kwargs)
+
     def get(self, request, uidb64, token):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
@@ -67,6 +77,11 @@ class ConfirmEmailView(View):
 
 
 class LoginView(View):
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('core:index')
+        return super(LoginView, self).dispatch(*args, **kwargs)
+
     def get(self, request):
         form = LoginForm()
         context = {'form': form, 'GOOGLE_CLIENT_ID': settings.GOOGLE_CLIENT_ID}
@@ -89,6 +104,11 @@ class LoginView(View):
 
 
 class GoogleLoginView(View):
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('core:index')
+        return super(GoogleLoginView, self).dispatch(*args, **kwargs)
+
     def post(self, request):
         token = request.POST.get('idtoken', '')
         user = authenticate(token=token)
@@ -108,6 +128,11 @@ class LogoutView(View):
 
 # This view is used to file a request for password change
 class RequestPasswordResetView(View):
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('core:index')
+        return super(RequestPasswordResetView, self).dispatch(*args, **kwargs)
+
     def get(self, request):
         form = UsernameOrEmailForm()
         return render(request, 'authentication/request_password_reset.html',
@@ -140,6 +165,11 @@ class RequestPasswordResetView(View):
 
 
 class ChangePasswordView(View):
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('core:index')
+        return super(ChangePasswordView, self).dispatch(*args, **kwargs)
+
     def __get_user_by_token(self, uidb64, token):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
