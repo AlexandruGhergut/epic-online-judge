@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.urls import reverse_lazy
 
 from . import views
 
@@ -14,5 +15,9 @@ urlpatterns = [
     url(r'^reset_password/$', views.RequestPasswordResetView.as_view(),
         name='reset_password'),
     url(r'^change_password/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        views.ChangePasswordView.as_view(), name='change_password')
+        views.ChangePasswordView.as_view(), name='change_password'),
+    url(r'^set_username/(?P<pk>[0-9]+)/$',
+        views.ChangeUsernameView.as_view(
+            success_url=reverse_lazy('core:index')
+        ), name='set_username'),
 ]

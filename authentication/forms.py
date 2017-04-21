@@ -4,6 +4,9 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.db.models import Q
 from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.validators import (ASCIIUsernameValidator,
+                                            UnicodeUsernameValidator)
+from django.utils import six
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (Submit, Layout, Field, Div, HTML,
                                  ButtonHolder, Fieldset)
@@ -82,11 +85,11 @@ class LoginForm(forms.Form):
         return super(LoginForm, self).clean(*args, **kwargs)
 
 
-class UsernameOrEmailForm(forms.Form):
+class RequestPasswordResetForm(forms.Form):
     username_or_email = forms.CharField(label='Username/Email')
 
     def __init__(self, *args, **kwargs):
-        super(UsernameOrEmailForm, self).__init__(*args, **kwargs)
+        super(RequestPasswordResetForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
         self.helper.form_method = 'post'
@@ -122,7 +125,7 @@ class UsernameOrEmailForm(forms.Form):
         if user.is_active is False:
             raise forms.Validationerror('Accout is not active')
 
-        return super(UsernameOrEmailForm, self).clean(*args, **kwargs)
+        return super(RequestPasswordResetForm, self).clean(*args, **kwargs)
 
 
 class ChangePasswordForm(SetPasswordForm):
@@ -159,3 +162,29 @@ class ChangePasswordForm(SetPasswordForm):
                 css_class='form-group',
                 ),
             )
+
+
+class ChangeUsernameForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ChangeUsernameForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'post'
+        self.helper.form_action = ''
+        self.helper.layout = Layout(
+            Div(
+                Field(
+                    'username',
+                    default='',
+                    css_class='form-control',
+                    ),
+                ButtonHolder(
+                    Submit('submit', 'Submit'),
+                ),
+                css_class='form-group',
+                )
+            )
+
+    class Meta:
+        model = User
+        fields = ('username',)

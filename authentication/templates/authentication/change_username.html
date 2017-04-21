@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'authentication/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class ="content">
+            {% crispy form %}
+        </div>
+    </div>
+{% endblock %}

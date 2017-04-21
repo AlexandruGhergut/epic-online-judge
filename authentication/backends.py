@@ -47,6 +47,7 @@ class GoogleSignInBackend(object):
                                        email=idinfo['email'])
             user.is_active = idinfo['email_verified']
             user.set_unusable_password()
+            user.username_set = False
             user.save()
             user.profile.first_name = idinfo['given_name']
             user.profile.last_name = idinfo['family_name']

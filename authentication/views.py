@@ -1,10 +1,11 @@
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
 from django.views import View
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import resolve
 from django.contrib import messages
@@ -12,8 +13,8 @@ from django.contrib.auth import logout, get_user_model
 from django.db.models import Q
 from django.conf import settings
 from django.http.response import HttpResponseRedirect
-from .forms import (RegisterForm, LoginForm, UsernameOrEmailForm,
-                    ChangePasswordForm)
+from .forms import (RegisterForm, LoginForm, RequestPasswordResetForm,
+                    ChangePasswordForm, ChangeUsernameForm)
 from .tokens import account_activation_token, password_reset_token
 from common import utils, strings
 
@@ -38,7 +39,7 @@ class RegisterView(FormView):
         subject = 'Activate account'
         message = \
             render_to_string('authentication/confirm_email_message.html', {
-                'username': user.username,
+                'username': self.request.user.username,
                 'domain': site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
@@ -114,7 +115,7 @@ class GoogleLoginView(View):
         user = authenticate(token=token)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(resolve('core:index'))
+            return redirect('core:index')
 
         messages.error(request, strings.AUTH_TOKEN_INVALID)
         return redirect('authentication:login')
@@ -134,12 +135,12 @@ class RequestPasswordResetView(View):
         return super(RequestPasswordResetView, self).dispatch(*args, **kwargs)
 
     def get(self, request):
-        form = UsernameOrEmailForm()
+        form = RequestPasswordResetForm()
         return render(request, 'authentication/request_password_reset.html',
                       {'form': form})
 
     def post(self, request):
-        form = UsernameOrEmailForm(request.POST)
+        form = RequestPasswordResetForm(request.POST)
 
         if form.is_valid():
             username_or_email = form.cleaned_data['username_or_email']
@@ -151,7 +152,7 @@ class RequestPasswordResetView(View):
             message_template = 'authentication/reset_password_message.html'
             message = \
                 render_to_string(message_template, {
-                    'username': user.username,
+                    'username': request.user.username,
                     'domain': site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': password_reset_token.make_token(user),
@@ -206,3 +207,25 @@ class ChangePasswordView(View):
         else:
             messages.error(request, strings.PASSWORD_RESET_TOKEN_INVALID)
             return redirect('authentication:login')
+
+
+class ChangeUsernameView(LoginRequiredMixin, UpdateView):
+    template_name = 'authentication/change_username.html'
+    form_class = ChangeUsernameForm
+    model = User
+
+    def dispatch(self, *args, **kwargs):
+        if 'set_username' not in self.request.session:
+            return redirect('core:index')
+        return super(ChangeUsernameView, self).dispatch(*args, **kwargs)
+
+    def get_initial(self):
+        initial = super(ChangeUsernameView, self).get_initial()
+        initial['username'] = ''
+        return initial
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.username_set = True
+        del self.request.session['set_username']
+        return super(ChangeUsernameView, self).form_valid(form)

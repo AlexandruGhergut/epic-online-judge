@@ -3,5 +3,5 @@
 {% block content %}
 {{ form.errors }}
 {{ form.non_field_errors }}
-    <h1>Welcome, {{ user.username }}</h1>
+    <h1>Welcome, {{ request.user.username }}</h1>
 {% endblock %}
