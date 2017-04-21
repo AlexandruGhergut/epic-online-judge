@@ -7,12 +7,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
-from django.urls import resolve
 from django.contrib import messages
 from django.contrib.auth import logout, get_user_model
 from django.db.models import Q
 from django.conf import settings
-from django.http.response import HttpResponseRedirect
 from .forms import (RegisterForm, LoginForm, RequestPasswordResetForm,
                     ChangePasswordForm, ChangeUsernameForm)
 from .tokens import account_activation_token, password_reset_token
