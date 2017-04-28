@@ -21,5 +21,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^', include('core.urls')),
     url(r'^', include('authentication.urls')),
+    url(r'^problemset/', include('problemset.urls')),
     url(r'^admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

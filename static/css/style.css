@@ -94,3 +94,8 @@
     background: #2789e8;
   }
 }
+
+#content {
+    margin-left: 10%;
+    margin-right: 10%;   
+}

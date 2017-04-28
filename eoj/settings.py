@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['epic-onlinejudge.azurewebsites.net',
 # Application definition
 
 INSTALLED_APPS = [
+    'problemset.apps.ProblemsetConfig',
     'common.apps.CommonConfig',
     'core.apps.CoreConfig',
     'authentication.apps.AuthenticationConfig',
