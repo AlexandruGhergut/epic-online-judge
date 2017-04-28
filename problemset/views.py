@@ -19,3 +19,8 @@ class CreateProblemView(LoginRequiredMixin, CreateView):
 class ListProblemsView(ListView):
     template_name = 'problemset/list_problems.html'
     queryset = Problem.objects.filter(publish_datetime__lte=datetime.now())
+
+
+class DetailProblemView(DetailView):
+    model = Problem
+    template_name = 'problemset/view_problem.html'

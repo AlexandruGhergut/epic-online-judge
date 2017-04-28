@@ -13,7 +13,11 @@
             {% for problem in object_list %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ problem.title }}</td>
+                    <td>
+                        <a href="{% url 'problemset:view_problem' problem.pk %}">
+                            {{ problem.title }}
+                        </a>
+                    </td>
                     <td>{{ problem.user }}</td>
                 </tr>
             {% endfor %}
