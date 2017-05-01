@@ -1,2 +1,9 @@
 Django==1.10.6
+django-ckeditor==5.2.2
 django-crispy-forms==1.6.1
+httplib2==0.10.3
+oauth2client==4.0.0
+pyasn1==0.2.3
+pyasn1-modules==0.0.8
+rsa==3.4.2
+six==1.10.0
