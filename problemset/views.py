@@ -17,36 +17,37 @@ class CreateProblemView(LoginRequiredMixin, CreateView):
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        test_case_form = TestCaseFormSet()
+        test_case_formset = TestCaseFormSet()
         return self.render_to_response(
             self.get_context_data(form=form,
-                                  test_case_form=test_case_form)
+                                  test_case_formset=test_case_formset)
         )
 
     def post(self, request, *args, **kwargs):
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        test_case_form = TestCaseFormSet(self.request.POST, self.request.FILES)
-        if (form.is_valid() and test_case_form.is_valid()):
-            return self.form_valid(form, test_case_form)
+        test_case_formset = TestCaseFormSet(self.request.POST,
+                                            self.request.FILES)
+        if (form.is_valid() and test_case_formset.is_valid()):
+            return self.form_valid(form, test_case_formset)
         else:
-            return self.form_invalid(form, test_case_form)
+            return self.form_invalid(form, test_case_formset)
 
-    def form_valid(self, form, test_case_form):
+    def form_valid(self, form, test_case_formset):
         form.instance.user = self.request.user
         self.object = form.save()
-        for test_form in test_case_form.forms:
+        for test_form in test_case_formset.forms:
             test_form.instance.problem = self.object
             test_form.instance.save()
         return HttpResponseRedirect(self.get_success_url())
 
         return super(CreateProblemView, self).form_valid(form)
 
-    def form_invalid(self, form, test_case_form):
+    def form_invalid(self, form, test_case_formset):
         return self.render_to_context(
             self.get_context_data(form=form,
-                                  test_case_form=test_case_form)
+                                  test_case_formset=test_case_formset)
         )
 
 

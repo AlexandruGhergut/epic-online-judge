@@ -1,5 +1,4 @@
 from django import forms
-from django.forms.models import inlineformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (Submit, Layout, Field, Div,
                                  ButtonHolder, HTML)
@@ -49,7 +48,7 @@ class TestCaseForm(forms.ModelForm):
         self.helper.form_class = 'form-inline'
         self.helper.form_tag = False
         self.helper.layout = Layout(
-            HTML('<div class="inline {{ test_case_form.prefix }}">'),
+            HTML('<div class="inline {{ test_case_formset.prefix }}">'),
             Field('input_file'),
             Field('output_file'),
             HTML('</div>'),

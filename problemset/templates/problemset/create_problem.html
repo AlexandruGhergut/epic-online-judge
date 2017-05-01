@@ -6,8 +6,8 @@
     <script src="{% static 'js/jquery.formset.js' %}"></script>
     <script type="text/javascript">
         $(function() {
-            $(".inline.{{ test_case_form.prefix }}").formset({
-                prefix: "{{ test_case_form.prefix }}",
+            $(".inline.{{ test_case_formset.prefix }}").formset({
+                prefix: "{{ test_case_formset.prefix }}",
             })
         })
     </script>
@@ -16,6 +16,6 @@
 {% block content %}
     <form method="post" action="{% url 'problemset:create_problem' %}" enctype="multipart/form-data">
         {% crispy form %}
-        {% crispy test_case_form test_case_form.form.helper %}
+        {% crispy test_case_formset test_case_formset.form.helper %}
     </form>
 {% endblock %}

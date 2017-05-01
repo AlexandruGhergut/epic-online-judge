@@ -87,8 +87,8 @@
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
     color: #ffffff;
   }
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #ffffff;
     background: #2789e8;
@@ -97,5 +97,5 @@
 
 #content {
     margin-left: 10%;
-    margin-right: 10%;   
+    margin-right: 10%;
 }
