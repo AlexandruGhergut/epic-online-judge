@@ -3,17 +3,51 @@ from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import ProblemForm
+from django.http import HttpResponseRedirect
+from .forms import ProblemForm, TestCaseFormSet
 from .models import Problem
 
 
 class CreateProblemView(LoginRequiredMixin, CreateView):
     form_class = ProblemForm
-    template_name = "common/content_center_form.html"
+    template_name = "problemset/create_problem.html"
+    success_url = '/'
 
-    def form_valid(self, form):
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        test_case_form = TestCaseFormSet()
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  test_case_form=test_case_form)
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        test_case_form = TestCaseFormSet(self.request.POST, self.request.FILES)
+        if (form.is_valid() and test_case_form.is_valid()):
+            return self.form_valid(form, test_case_form)
+        else:
+            return self.form_invalid(form, test_case_form)
+
+    def form_valid(self, form, test_case_form):
         form.instance.user = self.request.user
+        self.object = form.save()
+        for test_form in test_case_form.forms:
+            test_form.instance.problem = self.object
+            test_form.instance.save()
+        return HttpResponseRedirect(self.get_success_url())
+
         return super(CreateProblemView, self).form_valid(form)
+
+    def form_invalid(self, form, test_case_form):
+        return self.render_to_context(
+            self.get_context_data(form=form,
+                                  test_case_form=test_case_form)
+        )
 
 
 class ListProblemsView(ListView):

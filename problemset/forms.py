@@ -1,9 +1,10 @@
 from django import forms
-from django.urls import reverse
+from django.forms.models import inlineformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (Submit, Layout, Field, Div,
-                                 ButtonHolder)
-from .models import Problem
+                                 ButtonHolder, HTML)
+from django.forms.models import formset_factory
+from .models import Problem, TestCase
 
 
 class ProblemForm(forms.ModelForm):
@@ -11,8 +12,7 @@ class ProblemForm(forms.ModelForm):
         super(ProblemForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.form_method = 'post'
-        self.helper.form_action = reverse('problemset:create_problem')
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Div(
                 Field(
@@ -40,3 +40,24 @@ class ProblemForm(forms.ModelForm):
     class Meta:
         model = Problem
         exclude = ['user']
+
+
+class TestCaseForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TestCaseForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-inline'
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            HTML('<div class="inline {{ test_case_form.prefix }}">'),
+            Field('input_file'),
+            Field('output_file'),
+            HTML('</div>'),
+        )
+
+    class Meta:
+        model = TestCase
+        exclude = ['problem']
+
+
+TestCaseFormSet = formset_factory(TestCaseForm)
