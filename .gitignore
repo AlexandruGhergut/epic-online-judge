@@ -92,3 +92,4 @@ ENV/
 *.sqlite3
 media/
 eoj/static/
+.docker/env/
