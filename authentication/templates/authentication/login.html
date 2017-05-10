@@ -4,14 +4,10 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'authentication/css/style.css' %}">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="{{ GOOGLE_CLIENT_ID }}">
-
     <script>
         var GOOGLE_LOGIN_URL = "{% url 'authentication:google_login' %}";
     </script>
     <script src="{% static 'authentication/js/login.js' %}"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
 {% endblock %}
 
 {% block content %}

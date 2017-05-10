@@ -4,9 +4,6 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.db.models import Q
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.validators import (ASCIIUsernameValidator,
-                                            UnicodeUsernameValidator)
-from django.utils import six
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (Submit, Layout, Field, Div, HTML,
                                  ButtonHolder, Fieldset)

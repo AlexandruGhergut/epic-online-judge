@@ -4,8 +4,11 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="google-signin-client_id" content="{{ GOOGLE_CLIENT_ID }}">
     <script src="{% static 'js/jquery-3.2.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
+    <script src="{% static 'js/init.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -62,9 +65,10 @@
                                 <span class="glyphicon glyphicon-chevron-down"></span>
                              </a>
                              <ul class="dropdown-menu">
+                                 <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> My submissions</a></li>
                                  <li><a href="#"><span class="glyphicon glyphicon-user"></span> Edit profile</a></li>
                                  <li role="separator" class="divider"></li>
-                                 <li><a href="{% url 'authentication:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                                 <li id="logout-button"><a href="{% url 'authentication:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                              </ul>
                          </li>
                     {% else %}
