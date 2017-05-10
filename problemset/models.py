@@ -41,6 +41,6 @@ class Submission(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     source_file = models.FileField(upload_to=source_directory_path)
-    status = models.IntegerField(choices=STATUS_CHOICES)
+    status = models.IntegerField(default=0, choices=STATUS_CHOICES)
     error = models.OneToOneField(SubmissionError, null=True)
     score = models.IntegerField()
