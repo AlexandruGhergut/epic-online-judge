@@ -11,8 +11,8 @@ services:
         env_file:
             .docker/env/django.${APP_ENV}.env
         volumes:
-            - .:/var/www/${APP_NAME}
-        working_dir: /var/www/${APP_NAME}
+            - .:/var/www
+        working_dir: /var/www
         networks:
             - network1
 

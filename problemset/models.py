@@ -2,10 +2,11 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from ckeditor.fields import RichTextField
+from common.storage import AzureStorage
 
 
 def testcase_directory_path(instance, filename):
-    return 'problem/{0}/tests/filename'.format(instance.problem.pk)
+    return 'problem/{0}/tests/{1}'.format(instance.problem.pk, filename)
 
 
 class Problem(models.Model):

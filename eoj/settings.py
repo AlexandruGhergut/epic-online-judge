@@ -28,7 +28,7 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['epic-onlinejudge.azurewebsites.net',
                  '127.0.0.1',
-                 'localhost']
+                 'localhost',]
 
 
 # Application definition
@@ -158,3 +158,11 @@ AUTHENTICATION_BACKENDS = ['authentication.backends.EmailOrUsernameBackend',
                            'authentication.backends.GoogleSignInBackend']
 
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
+
+AZURE_STORAGE_ACCOUNT_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT_NAME', '')
+AZURE_STORAGE_ACCOUNT_KEY = os.environ.get('AZURE_STORAGE_ACCOUNT_KEY', '')
+AZURE_STORAGE_DEFAULT_CONTAINER = \
+    os.environ.get('AZURE_STORAGE_DEFAULT_CONTAINER', 'media')
+DEFAULT_FILE_STORAGE = \
+    os.environ.get('DEFAULT_FILE_STORAGE',
+                   'django.core.files.storage.FileSystemStorage')

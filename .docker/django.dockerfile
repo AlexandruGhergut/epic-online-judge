@@ -2,8 +2,8 @@ FROM        python:3.5.2
 
 MAINTAINER  Alexandru Gherguț
 
-COPY        . /var/www
-WORKDIR     /var/www
+COPY        . /var/www/
+WORKDIR     /var/www/
 
 RUN         pip install -r requirements.txt
 RUN         python manage.py makemigrations
