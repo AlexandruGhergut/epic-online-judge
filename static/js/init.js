@@ -14,5 +14,12 @@ window.onLoadCallback = function() {
 $(document).ready(function() {
     $("#logout-button").click(function() {
         signOut();
-    })
+    });
+
+    $('.dropdown').hover(function() {
+        $(this).addClass('open');
+    },
+    function() {
+        $(this).removeClass('open');
+    });
 })
