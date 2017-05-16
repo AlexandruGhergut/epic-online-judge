@@ -65,7 +65,11 @@
                                 <span class="glyphicon glyphicon-chevron-down"></span>
                              </a>
                              <ul class="dropdown-menu">
-                                 <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> My submissions</a></li>
+                                 <li>
+                                     <a href="{% url 'problemset:list_submissions' %}?user={{ request.user.pk }}">
+                                         <span class="glyphicon glyphicon-list-alt"></span> My submissions
+                                     </a>
+                                 </li>
                                  <li><a href="#"><span class="glyphicon glyphicon-user"></span> Edit profile</a></li>
                                  <li role="separator" class="divider"></li>
                                  <li id="logout-button"><a href="{% url 'authentication:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

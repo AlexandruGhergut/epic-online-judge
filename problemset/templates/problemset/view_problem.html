@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <div class="text-center">
@@ -8,4 +9,7 @@
     <div>
         <p>{{ object.statement|safe }}</p>
     </div>
+
+    <div>
+        {% crispy submission_form %}
 {% endblock %}

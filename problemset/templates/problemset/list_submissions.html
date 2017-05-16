@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="text-center">
+        <h2>Submissions</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Problem Title</th>
+                    <th>Date</th>
+                <tr>
+            </thead>
+            {% for submission in object_list %}
+                <tr>
+                    <td>{{ submission.pk }}</td>
+                    <td>{{ submission.user }}</td>
+                    <td>
+                        <a href="{% url 'problemset:view_problem' submission.problem.pk %}">
+                            {{ submission.problem.title }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'problemset:view_source' submission.pk %}">
+                            View source
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (Submit, Layout, Field, Div,
                                  ButtonHolder, HTML)
 from django.forms.models import formset_factory
-from .models import Problem, TestCase
+from .models import Problem, TestCase, Submission
 
 
 class ProblemForm(forms.ModelForm):
@@ -57,6 +57,28 @@ class TestCaseForm(forms.ModelForm):
     class Meta:
         model = TestCase
         exclude = ['problem']
+
+
+class SubmissionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SubmissionForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'post'
+
+        self.helper.layout = Layout(
+            Div(
+                Field('source_file'),
+                ButtonHolder(
+                    Submit('submit', 'Submit'),
+                ),
+                css_class='form-group',
+                ),
+        )
+
+    class Meta:
+        model = Submission
+        fields = ('source_file',)
 
 
 TestCaseFormSet = formset_factory(TestCaseForm)

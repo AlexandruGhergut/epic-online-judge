@@ -21,7 +21,7 @@ services:
         env_file:
             .docker/env/django.${APP_ENV}.env
         volumes:
-            - .:/var/www
+            - .:/var/www/
         working_dir: /var/www
         depends_on:
           - "db"

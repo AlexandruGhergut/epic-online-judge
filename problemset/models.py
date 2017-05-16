@@ -43,4 +43,4 @@ class Submission(models.Model):
     source_file = models.FileField(upload_to=source_directory_path)
     status = models.IntegerField(default=0, choices=STATUS_CHOICES)
     error = models.OneToOneField(SubmissionError, null=True)
-    score = models.IntegerField()
+    score = models.IntegerField(null=True)

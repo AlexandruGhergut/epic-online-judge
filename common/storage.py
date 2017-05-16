@@ -1,4 +1,6 @@
+import tempfile
 from django.core.files.storage import Storage
+from django.core.files import File
 from django.utils.deconstruct import deconstructible
 from azure.storage.blob import BlockBlobService, ContentSettings
 from django.conf import settings
@@ -27,6 +29,18 @@ class AzureStorage(Storage):
             )
         )
         return name
+
+    def _open(self, name, mode='rb'):
+        tmp_file = tempfile.TemporaryFile()
+        self.block_blob_service.get_blob_to_stream(
+            container_name=settings.AZURE_STORAGE_DEFAULT_CONTAINER,
+            blob_name=name,
+            stream=tmp_file,
+            max_connections=2
+        )
+        tmp_file.seek(0)
+
+        return File(tmp_file)
 
     def exists(self, name):
         generator = self.block_blob_service.list_blobs('media')
