@@ -33,12 +33,31 @@ services:
         networks:
             - network1
 
-    # rabbit:
-    #     hostname: rabbit
-    #     image: rabbitmq:3.6
-    #     ports:
-    #         - "5672:5672"
-    #         - "15672:15672"
+    rabbitmq:
+        build:
+            context: .
+            dockerfile: ./.docker/mq.dockerfile
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        env_file:
+            .docker/env/rabbitmq.${APP_ENV}.env
+        networks:
+            - network1
+
+    worker:
+        build:
+            context: .
+            dockerfile: ./.docker/django.dockerfile
+        command: celery -A eoj worker -l info
+        env_file:
+            .docker/env/django.${APP_ENV}.env
+        volumes:
+            - .:/var/www/
+        depends_on:
+            - rabbitmq
+        networks:
+            - network1
 
 networks:
     network1:

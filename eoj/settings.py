@@ -171,10 +171,28 @@ AUTHENTICATION_BACKENDS = ['authentication.backends.EmailOrUsernameBackend',
 
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
 
+# Azure
 AZURE_STORAGE_ACCOUNT_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT_NAME', '')
 AZURE_STORAGE_ACCOUNT_KEY = os.environ.get('AZURE_STORAGE_ACCOUNT_KEY', '')
 AZURE_STORAGE_DEFAULT_CONTAINER = \
     os.environ.get('AZURE_STORAGE_DEFAULT_CONTAINER', 'media')
+
+
 DEFAULT_FILE_STORAGE = \
     os.environ.get('DEFAULT_FILE_STORAGE',
                    'django.core.files.storage.FileSystemStorage')
+
+# Message Queue
+MQ_USER = os.environ.get('MQ_USER', '')
+MQ_PASSWORD = os.environ.get('MQ_PASSWORD', '')
+MQ_HOST = os.environ.get('MQ_HOST', '')
+MQ_VHOST = os.environ.get('MQ_VHOST', '')
+
+CELERY_BROKER_URL = os.environ.get('BROKER_URL', '')
+if not CELERY_BROKER_URL:
+    CELERY_BROKER_URL = 'amqp://{user}:{password}@{hostname}:5672/{vhost}'.format(
+        user=MQ_USER,
+        password=MQ_PASSWORD,
+        hostname=MQ_HOST,
+        vhost=MQ_VHOST,
+    )

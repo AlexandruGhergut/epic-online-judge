@@ -1,7 +1,10 @@
+amqp==2.1.4
 asn1crypto==0.22.0
 azure-common==1.1.5
 azure-nspkg==2.0.0
 azure-storage==0.34.2
+billiard==3.5.0.2
+celery==4.0.2
 cffi==1.10.0
 cryptography==1.8.1
 Django==1.10.6
@@ -9,6 +12,7 @@ django-ckeditor==5.2.2
 django-crispy-forms==1.6.1
 httplib2==0.10.3
 idna==2.5
+kombu==4.0.2
 oauth2client==4.0.0
 packaging==16.8
 psycopg2==2.7.1
@@ -17,6 +21,8 @@ pyasn1-modules==0.0.8
 pycparser==2.17
 pyparsing==2.2.0
 python-dateutil==2.6.0
+pytz==2017.2
 requests==2.14.1
 rsa==3.4.2
 six==1.10.0
+vine==1.1.3
