@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils.timezone import localtime, now
 from django.views import View
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
@@ -7,8 +7,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from .forms import ProblemForm, TestCaseFormSet, SubmissionForm
+from .forms import ProblemForm, SubmissionForm, TestCaseForm
 from .models import Problem, Submission
+from .tasks import test
 
 
 class CreateProblemView(LoginRequiredMixin, CreateView):
@@ -20,43 +21,43 @@ class CreateProblemView(LoginRequiredMixin, CreateView):
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        test_case_formset = TestCaseFormSet()
+        test_case_form = TestCaseForm()
+
         return self.render_to_response(
             self.get_context_data(form=form,
-                                  test_case_formset=test_case_formset)
+                                  test_case_form=test_case_form)
         )
 
     def post(self, request, *args, **kwargs):
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        test_case_formset = TestCaseFormSet(self.request.POST,
-                                            self.request.FILES)
-        if (form.is_valid() and test_case_formset.is_valid()):
-            return self.form_valid(form, test_case_formset)
-        else:
-            return self.form_invalid(form, test_case_formset)
+        test_case_form = TestCaseForm(self.request.POST,
+                                      self.request.FILES)
 
-    def form_valid(self, form, test_case_formset):
-        form.instance.user = self.request.user
-        self.object = form.save()
-        for test_form in test_case_formset.forms:
-            test_form.instance.problem = self.object
-            test_form.instance.save()
-        return HttpResponseRedirect(self.get_success_url())
+        if (form.is_valid() and test_case_form.is_valid()):
+            form.instance.user = self.request.user
 
-        return super(CreateProblemView, self).form_valid(form)
+            self.object = form.save(commit=False)
+            test_case = test_case_form.save(commit=False)
 
-    def form_invalid(self, form, test_case_formset):
-        return self.render_to_context(
+            self.object.test_case = test_case
+            self.object.save()  # save problem object
+
+            test_case.problem = self.object
+            test_case.save()  # save test object
+
+            return HttpResponseRedirect(self.get_success_url())
+
+        return self.render_to_response(
             self.get_context_data(form=form,
-                                  test_case_formset=test_case_formset)
+                                  test_case_form=test_case_form)
         )
 
 
 class ListProblemsView(ListView):
     template_name = 'problemset/list_problems.html'
-    queryset = Problem.objects.filter(publish_datetime__lte=datetime.now())
+    queryset = Problem.objects.filter(publish_datetime__lte=localtime(now()))
 
 
 class DetailProblemView(DetailView):
@@ -78,6 +79,7 @@ class DetailProblemView(DetailView):
             submission.problem = self.get_object()
             submission.save()
 
+            test.delay()
             return HttpResponseRedirect('{0}?user={1}&problem={2}'.format(
                 reverse('problemset:list_submissions'),
                 request.user.pk,

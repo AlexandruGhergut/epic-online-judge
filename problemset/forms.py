@@ -26,13 +26,18 @@ class ProblemForm(forms.ModelForm):
                     'publish_datetime',
                     css_class='form-control',
                     ),
+                Field(
+                    'sample_input',
+                    css_class='form-control',
+                    ),
+                Field(
+                    'sample_output',
+                    css_class='form-control',
+                    ),
+                Field(
+                    'solution_source_file',
+                ),
                 css_class='form-group'
-                ),
-            Div(
-                ButtonHolder(
-                    Submit('submit', 'Submit'),
-                ),
-                css_class='form-group',
                 ),
         )
 
@@ -48,10 +53,7 @@ class TestCaseForm(forms.ModelForm):
         self.helper.form_class = 'form-inline'
         self.helper.form_tag = False
         self.helper.layout = Layout(
-            HTML('<div class="inline {{ test_case_formset.prefix }}">'),
-            Field('input_file'),
-            Field('output_file'),
-            HTML('</div>'),
+            Field('input_data_file'),
         )
 
     class Meta:

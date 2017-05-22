@@ -99,3 +99,7 @@
     margin-left: 10%;
     margin-right: 10%;
 }
+
+.table-text-center td, .table-text-center th {
+    text-align: center;
+}

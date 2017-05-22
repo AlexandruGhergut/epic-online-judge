@@ -11,10 +11,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="g-signin2" data-onsuccess="onGoogleSignIn"></div>
     <div class="container">
         <div class ="content">
             {% crispy form %}
+            <hr/>
+            <strong> Or sign in with:</strong>
+            <div class="g-signin2" data-onsuccess="onGoogleSignIn"></div>
         </div>
     </div>
 {% endblock %}
