@@ -39,9 +39,14 @@ class SubmissionError(models.Model):
 
 class Submission(models.Model):
     STATUS_CHOICES = (
-        (0, 'Pending'),
-        (1, 'Success'),
-        (2, 'Error'),
+        (0, 'Error'),
+        (1, 'Pending'),
+        (2, 'Tests passed'),
+        (3, 'Wrong answer'),
+    )
+
+    LANGUAGE_CHOICES = (
+        (0, 'C++'),
     )
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -49,4 +54,4 @@ class Submission(models.Model):
     source_file = models.FileField(upload_to=source_directory_path)
     status = models.IntegerField(default=0, choices=STATUS_CHOICES)
     error = models.OneToOneField(SubmissionError, null=True)
-    score = models.IntegerField(null=True)
+    language = models.IntegerField(choices=LANGUAGE_CHOICES)
