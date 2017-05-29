@@ -31,7 +31,11 @@ class AzureStorage(Storage):
         return name
 
     def _open(self, name, mode='rb'):
-        tmp_file = tempfile.TemporaryFile()
+        extension_index = name.rfind('.')
+        extension = ''
+        if extension_index != -1:
+            extension = name[extension_index:]
+        tmp_file = tempfile.NamedTemporaryFile(suffix=extension, delete=False)
         self.block_blob_service.get_blob_to_stream(
             container_name=settings.AZURE_STORAGE_DEFAULT_CONTAINER,
             blob_name=name,

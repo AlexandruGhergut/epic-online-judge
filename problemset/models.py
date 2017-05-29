@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from ckeditor.fields import RichTextField
-
+from . import constants
 
 def solution_directory_path(instance, filename):
     return 'problem/{0}/solution/{1}'.format(instance.pk, filename)
@@ -38,20 +38,10 @@ class SubmissionError(models.Model):
 
 
 class Submission(models.Model):
-    STATUS_CHOICES = (
-        (0, 'Error'),
-        (1, 'Pending'),
-        (2, 'Tests passed'),
-        (3, 'Wrong answer'),
-    )
-
-    LANGUAGE_CHOICES = (
-        (0, 'C++'),
-    )
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     source_file = models.FileField(upload_to=source_directory_path)
-    status = models.IntegerField(default=0, choices=STATUS_CHOICES)
+    status = models.IntegerField(default=0, choices=constants.Status.CHOICES)
     error = models.OneToOneField(SubmissionError, null=True)
-    language = models.IntegerField(choices=LANGUAGE_CHOICES)
+    language = models.IntegerField(choices=constants.Language.CHOICES)

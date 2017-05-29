@@ -12,6 +12,7 @@
                     <th>#</th>
                     <th>User</th>
                     <th>Problem Title</th>
+                    <th>Status</th>
                     <th>Date</th>
                 <tr>
             </thead>
@@ -24,6 +25,7 @@
                             {{ submission.problem.title }}
                         </a>
                     </td>
+                    <td>{{ submission.get_status_display }}</td>
                     <td>
                         <a href="{% url 'problemset:view_source' submission.pk %}">
                             View source

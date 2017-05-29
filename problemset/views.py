@@ -9,8 +9,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from .forms import ProblemForm, SubmissionForm, TestCaseForm
 from .models import Problem, Submission
-from .tasks import test
-
+from .tasks import judge_submission
 
 class CreateProblemView(LoginRequiredMixin, CreateView):
     form_class = ProblemForm
@@ -77,9 +76,10 @@ class DetailProblemView(DetailView):
             submission = form.save(commit=False)
             submission.user = request.user
             submission.problem = self.get_object()
+            submission.language = 0
             submission.save()
 
-            test.delay()
+            judge_submission.delay(submission.pk)
             return HttpResponseRedirect('{0}?user={1}&problem={2}'.format(
                 reverse('problemset:list_submissions'),
                 request.user.pk,
@@ -107,6 +107,5 @@ class SourceView(View):
         submission = get_object_or_404(Submission, pk=pk)
         source_field = submission.source_file
         content = source_field.storage.open(source_field.name).read()
-
         return render(request, 'problemset/view_source.html',
                       {'source': content})
