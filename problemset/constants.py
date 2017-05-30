@@ -15,5 +15,5 @@ class Status:
 class Language:
     CPP = 0
     CHOICES = (
-        (0, 'C++'),
+        (CPP, 'C++'),
     )

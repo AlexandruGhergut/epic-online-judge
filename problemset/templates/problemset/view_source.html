@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'js/run_prettify.js' %}"></script>
+{% endblock %}
+
+
 {% block content %}
     <div>
-        <pre><code>{{ source }}</code></pre>
+        <pre class="prettyprint linenums">{{ source }}</pre>
     </div>
 
     <div>
