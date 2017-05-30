@@ -4,6 +4,7 @@ from django.conf import settings
 from ckeditor.fields import RichTextField
 from . import constants
 
+
 def solution_directory_path(instance, filename):
     return 'problem/{0}/solution/{1}'.format(instance.pk, filename)
 
@@ -42,6 +43,7 @@ class Submission(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     source_file = models.FileField(upload_to=source_directory_path)
-    status = models.IntegerField(default=0, choices=constants.Status.CHOICES)
+    status = models.IntegerField(default=constants.Status.PENDING,
+                                 choices=constants.Status.CHOICES)
     error = models.OneToOneField(SubmissionError, null=True)
     language = models.IntegerField(choices=constants.Language.CHOICES)
