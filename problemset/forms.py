@@ -24,7 +24,7 @@ class ProblemForm(forms.ModelForm):
                     ),
                 Field(
                     'publish_datetime',
-                    css_class='form-control',
+                    css_class='form-control datetime-field',
                     ),
                 Field(
                     'sample_input',
