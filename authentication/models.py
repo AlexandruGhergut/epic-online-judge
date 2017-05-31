@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import six, timezone
 from django.contrib.auth.validators import (ASCIIUsernameValidator,
                                             UnicodeUsernameValidator)
+from timezone_field import TimeZoneField
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -42,6 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     username_set = models.BooleanField(default=True)
+    timezone = TimeZoneField(default='Europe/London')
 
     objects = UserManager()
 

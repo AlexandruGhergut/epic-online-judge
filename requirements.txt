@@ -10,6 +10,7 @@ cryptography==1.8.1
 Django==1.10.6
 django-ckeditor==5.2.2
 django-crispy-forms==1.6.1
+django-timezone-field==2.0
 httplib2==0.10.3
 idna==2.5
 kombu==4.0.2

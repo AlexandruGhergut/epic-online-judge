@@ -1,4 +1,4 @@
-from django.utils.timezone import localtime, now
+from django.db.models.functions import Now
 from django.views import View
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
@@ -10,6 +10,7 @@ from django.urls import reverse
 from .forms import ProblemForm, SubmissionForm, TestCaseForm
 from .models import Problem, Submission
 from .tasks import judge_submission
+
 
 class CreateProblemView(LoginRequiredMixin, CreateView):
     form_class = ProblemForm
@@ -56,7 +57,8 @@ class CreateProblemView(LoginRequiredMixin, CreateView):
 
 class ListProblemsView(ListView):
     template_name = 'problemset/list_problems.html'
-    queryset = Problem.objects.filter(publish_datetime__lte=localtime(now()))
+    queryset = Problem.objects.filter(publish_datetime__lte=Now()) \
+        .order_by('-publish_datetime')
 
 
 class DetailProblemView(DetailView):

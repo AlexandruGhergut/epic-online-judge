@@ -7,6 +7,7 @@ from django.contrib.auth.forms import SetPasswordForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (Submit, Layout, Field, Div, HTML,
                                  ButtonHolder, Fieldset)
+from timezone_field import TimeZoneFormField
 
 User = get_user_model()
 
@@ -15,10 +16,48 @@ class RegisterForm(UserCreationForm):
     email = \
         forms.EmailField(max_length=256,
                          help_text='Required. Enter a valid email address.')
+    timezone = TimeZoneFormField()
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'post'
+        self.helper.form_action = reverse('authentication:register')
+        self.helper.layout = Layout(
+            Div(
+                Field(
+                    'username',
+                    css_class='form-control',
+                    ),
+                Field(
+                    'email',
+                    css_class='form-control',
+                    ),
+                Field(
+                    'password1',
+                    css_class='form-control',
+                    ),
+                Field(
+                    'password2',
+                    css_class='form-control',
+                    ),
+                Field(
+                    'timezone',
+                    css_class='form-control',
+                    ),
+                css_class='form-group',
+                ),
+            Div(
+                ButtonHolder(
+                    Submit('submit', 'Submit'),
+                ),
+            ),
+        )
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'timezone')
 
 
 class LoginForm(forms.Form):

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-
+{% load tz %}
+{% get_current_timezone as TIME_ZONE %}
 {% block head %}
     <link rel="stylesheet" href="{% static 'authentication/css/style.css' %}">
 {% endblock %}
@@ -9,7 +10,6 @@
 {% block content %}
 <form action="{% url 'authentication:register' %}" method="post">
     {% csrf_token %}
-    {{ form|crispy }}
-    <input type="submit" value="Submit" />
+    {% crispy form %}
 </form>
 {% endblock %}
