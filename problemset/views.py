@@ -101,7 +101,7 @@ class ListSubmissionView(ListView):
             if value:
                 query_dict[field] = value
 
-        return Submission.objects.filter(**query_dict)
+        return Submission.objects.filter(**query_dict).order_by('-datetime')
 
 
 class SourceView(View):

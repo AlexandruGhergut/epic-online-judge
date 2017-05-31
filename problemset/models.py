@@ -47,3 +47,4 @@ class Submission(models.Model):
                                  choices=constants.Status.CHOICES)
     error = models.OneToOneField(SubmissionError, null=True)
     language = models.IntegerField(choices=constants.Language.CHOICES)
+    datetime = models.DateTimeField(default=timezone.now)
