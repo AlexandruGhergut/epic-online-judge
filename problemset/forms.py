@@ -71,6 +71,7 @@ class SubmissionForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Field('source_file'),
+                Field('language'),
                 ButtonHolder(
                     Submit('submit', 'Submit'),
                 ),
@@ -80,7 +81,7 @@ class SubmissionForm(forms.ModelForm):
 
     class Meta:
         model = Submission
-        fields = ('source_file',)
+        fields = ('source_file', 'language',)
 
 
 TestCaseFormSet = formset_factory(TestCaseForm)

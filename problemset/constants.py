@@ -14,6 +14,8 @@ class Status:
 
 class Language:
     CPP = 0
+    PYTHON = 1
     CHOICES = (
         (CPP, 'C++'),
+        (PYTHON, 'Python')
     )
