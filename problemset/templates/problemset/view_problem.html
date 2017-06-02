@@ -10,5 +10,7 @@
         <p>{{ object.statement|safe }}</p>
     </div>
 
+    <form method="post" action="{% url 'core:submit_source' object.pk %}" enctype="multipart/form-data">
         {% crispy submission_form %}
+    </form>
 {% endblock %}

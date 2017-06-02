@@ -20,7 +20,7 @@ def judge_submission(submission_id):
             testcase = submission.problem.testcase.input_data_file
             testcase_path = testcase.storage.open(testcase.name).name
 
-            args = ['problemset/scripts/process_cpp.sh', source_path, 'source_output',
+            args = ['core/scripts/process_cpp.sh', source_path, 'source_output',
                     solution_path, 'solution_output', testcase_path]
 
             try:

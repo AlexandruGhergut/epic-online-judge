@@ -9,8 +9,4 @@ urlpatterns = [
     url(r'^$', views.ListProblemsView.as_view(), name='list_problems'),
     url(r'^problem/(?P<pk>[0-9]+)/$', views.DetailProblemView.as_view(),
         name='view_problem'),
-    url(r'^submission/$', views.ListSubmissionView.as_view(),
-        name='list_submissions'),
-    url(r'^submission/(?P<pk>[0-9]+)/$', views.SourceView.as_view(),
-        name='view_source')
 ]

@@ -1,15 +1,12 @@
 from django.db.models.functions import Now
-from django.views import View
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
-from .forms import ProblemForm, SubmissionForm, TestCaseForm
-from .models import Problem, Submission
-from .tasks import judge_submission
+from core.forms import SubmissionForm
+from .forms import ProblemForm, TestCaseForm
+from .models import Problem
 
 
 class CreateProblemView(LoginRequiredMixin, CreateView):
@@ -70,44 +67,3 @@ class DetailProblemView(DetailView):
         submission_form = SubmissionForm()
         context['submission_form'] = submission_form
         return context
-
-    # Request for source submission
-    def post(self, request, *args, **kwargs):
-        form = SubmissionForm(request.POST, request.FILES)
-        if form.is_valid():
-            submission = form.save(commit=False)
-            submission.user = request.user
-            submission.problem = self.get_object()
-            submission.language = 0
-            submission.save()
-
-            judge_submission.delay(submission.pk)
-            return HttpResponseRedirect('{0}?user={1}&problem={2}'.format(
-                reverse('problemset:list_submissions'),
-                request.user.pk,
-                submission.problem.pk
-            ))
-
-
-class ListSubmissionView(ListView):
-    model = Submission
-    template_name = 'problemset/list_submissions.html'
-
-    def get_queryset(self):
-        fields = ('user', 'problem')
-        query_dict = {}
-        for field in fields:
-            value = self.request.GET.get(field)
-            if value:
-                query_dict[field] = value
-
-        return Submission.objects.filter(**query_dict).order_by('-datetime')
-
-
-class SourceView(View):
-    def get(self, request, pk, *args, **kwargs):
-        submission = get_object_or_404(Submission, pk=pk)
-        source_field = submission.source_file
-        content = source_field.storage.open(source_field.name).read()
-        return render(request, 'problemset/view_source.html',
-                      {'source': content})
