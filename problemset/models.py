@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from core import constants
 from ckeditor.fields import RichTextField
 
 
@@ -26,6 +27,7 @@ class Problem(models.Model):
     sample_input = models.CharField(max_length=128)
     sample_output = models.CharField(max_length=128)
     solution_source_file = models.FileField(upload_to=solution_directory_path)
+    solution_language = models.IntegerField(choices=constants.Language.CHOICES)
 
 
 class TestCase(models.Model):

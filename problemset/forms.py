@@ -36,6 +36,9 @@ class ProblemForm(forms.ModelForm):
                 Field(
                     'solution_source_file',
                 ),
+                Field(
+                    'solution_language',
+                ),
                 css_class='form-group'
                 ),
         )
