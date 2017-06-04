@@ -18,6 +18,10 @@ def testcase_directory_path(instance, filename):
     return 'problem/{0}/tests/{1}'.format(instance.problem.pk, filename)
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=32, unique=True)
+
+
 class Problem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              null=True, on_delete=models.SET_NULL)
@@ -28,6 +32,7 @@ class Problem(models.Model):
     sample_output = models.CharField(max_length=128)
     solution_source_file = models.FileField(upload_to=solution_directory_path)
     solution_language = models.IntegerField(choices=constants.Language.CHOICES)
+    tags = models.ManyToManyField(Tag)
 
 
 class TestCase(models.Model):
