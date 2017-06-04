@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block head %}
+    <script src="{% static 'core/js/list_submissions.js' %}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="text-center">
         <h2>Submissions</h2>
@@ -17,24 +23,27 @@
                     <th>Date</th>
                 <tr>
             </thead>
-            {% for submission in object_list %}
-                <tr>
-                    <td>{{ submission.pk }}</td>
-                    <td>{{ submission.user }}</td>
-                    <td>
-                        <a href="{% url 'problemset:view_problem' submission.problem.pk %}">
-                            {{ submission.problem.title }}
-                        </a>
-                    </td>
-                    <td>{{ submission.get_status_display }}</td>
-                    <td>
-                        <a href="{% url 'core:view_source' submission.pk %}">
-                            View source
-                        </a>
-                    </td>
-                    <td>{{ submission.datetime }}</td>
-                </tr>
-            {% endfor %}
+
+            <tbody>
+                {% for submission in object_list %}
+                    <tr class="{% if submission.get_status_display == 'Pending' %}pending{% endif %}">
+                        <td class="submission_id">{{ submission.pk }}</td>
+                        <td>{{ submission.user }}</td>
+                        <td>
+                            <a href="{% url 'problemset:view_problem' submission.problem.pk %}">
+                                {{ submission.problem.title }}
+                            </a>
+                        </td>
+                        <td class="submission_status">{{ submission.get_status_display }}</td>
+                        <td>
+                            <a href="{% url 'core:view_source' submission.pk %}">
+                                View source
+                            </a>
+                        </td>
+                        <td>{{ submission.datetime }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </div>
     </div>
 {% endblock %}

@@ -1,8 +1,9 @@
+import json
 from django.shortcuts import render
 from django.views import View
 from django.views.generic.list import ListView
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from .models import Submission
 from problemset.models import Problem
@@ -73,3 +74,16 @@ class SourceSubmitView(View):
                 request.user.pk,
                 submission.problem.pk
             ))
+
+
+class GetSubmissionStatusView(View):
+    def post(self, request):
+        ids = request.POST.getlist('ids[]')
+
+        status_dict = {}
+        submissions = Submission.objects.filter(pk__in=ids)
+
+        for submission in submissions:
+            status_dict[submission.pk] = submission.get_status_display()
+
+        return JsonResponse(status_dict)
