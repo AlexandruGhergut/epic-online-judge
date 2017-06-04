@@ -33,10 +33,27 @@ class ListSubmissionView(ListView):
 class SourceView(View):
     def get(self, request, pk, *args, **kwargs):
         submission = get_object_or_404(Submission, pk=pk)
-        source_field = submission.source_file
-        content = source_field.storage.open(source_field.name).read()
-        return render(request, 'core/view_source.html',
-                      {'source': content})
+
+        source_file = submission.source_file
+        source_file = source_file.storage.open(source_file.name)
+        source_content = source_file.read()
+
+        solution_output = submission.problem.testcase.output
+
+        test_file = submission.problem.testcase.input_data_file
+        test_file = test_file.storage.open(test_file.name)
+        test_content = test_file.read()
+
+        source_output = submission.source_output
+
+        context = {'source_content': source_content,
+                   'test_content': test_content,
+                   'source_output': source_output,
+                   'solution_output': solution_output}
+
+        source_file.close()
+        test_file.close()
+        return render(request, 'core/view_source.html', context)
 
 
 class SourceSubmitView(View):

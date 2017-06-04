@@ -31,21 +31,24 @@ def extract_output(submission):
 
     if submission:
         source_file = submission.source_file
-        source_path = source_file.storage.open(source_file.name).name
-
-        solution_file = submission.problem.solution_source_file
-        solution_path = solution_file.storage.open(solution_file.name).name
+        source_file = source_file.storage.open(source_file.name)
+        source_path = source_file.name
 
         testcase = submission.problem.testcase.input_data_file
-        testcase_path = testcase.storage.open(testcase.name).name
+        testcase = testcase.storage.open(testcase.name)
+        testcase_path = testcase.name
 
         submission_language = submission.language
-        solution_language = submission.problem.solution_language
 
         result[0] = process_source(source_path, 'source_output',
-                                   testcase_path, submission_language)
-        result[1] = process_source(solution_path, 'solution_output',
-                                   testcase_path, solution_language)
+                                   testcase_path, submission_language).rstrip()
+        result[1] = submission.problem.testcase.output.rstrip()
+        submission.source_output = result[1]
+        submission.save()
+
+        # free resources
+        source_file.close()
+        testcase.close()
 
     return result
 
@@ -60,6 +63,11 @@ def process_source(source_path, source_output, testcase_path, source_language):
 
     args = [processing_script_path, source_path, source_output,
             testcase_path]
-
     output = subprocess.check_output(args, stderr=subprocess.STDOUT)
-    return output
+
+    if output:
+        print(output)
+
+    output = subprocess.check_output(['cat', source_output],
+                                     stderr=subprocess.STDOUT)
+    return output.decode('utf-8')

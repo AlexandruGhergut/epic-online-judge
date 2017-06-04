@@ -52,12 +52,11 @@ services:
         command: celery -A eoj worker -l info
         env_file:
             .docker/env/django.${APP_ENV}.env
-        volumes:
-            - .:/var/www/
         depends_on:
             - rabbitmq
         networks:
             - network1
+
 
 networks:
     network1:

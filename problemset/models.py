@@ -33,3 +33,4 @@ class Problem(models.Model):
 class TestCase(models.Model):
     problem = models.OneToOneField(Problem, on_delete=models.CASCADE)
     input_data_file = models.FileField(upload_to=testcase_directory_path)
+    output = models.TextField(null=True)

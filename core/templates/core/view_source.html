@@ -9,8 +9,22 @@
 
 {% block content %}
     <div>
-        <pre class="prettyprint linenums">{{ source }}</pre>
+        Source file
+        <pre class="prettyprint linenums">{{ source_content }}</pre>
     </div>
 
     <div>
+        Input
+        <pre>{{ test_content }}</pre>
+    </div>
+
+    <div>
+        Output
+        <pre>{{ source_output }}</pre>
+    </div>
+
+    <div>
+        Answer
+        <pre>{{ solution_output }}</pre>
+    </div>
 {% endblock %}

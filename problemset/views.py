@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from core.forms import SubmissionForm
 from .forms import ProblemForm, TestCaseForm
 from .models import Problem
+from .tasks import judge_problem_solution
 
 
 class CreateProblemView(LoginRequiredMixin, CreateView):
@@ -43,6 +44,8 @@ class CreateProblemView(LoginRequiredMixin, CreateView):
 
             test_case.problem = self.object
             test_case.save()  # save test object
+
+            judge_problem_solution.delay(self.object.pk)
 
             return HttpResponseRedirect(self.get_success_url())
 

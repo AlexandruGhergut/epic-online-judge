@@ -60,7 +60,7 @@ class TestCaseForm(forms.ModelForm):
 
     class Meta:
         model = TestCase
-        exclude = ['problem']
+        exclude = ['problem', 'output']
 
 
 TestCaseFormSet = formset_factory(TestCaseForm)

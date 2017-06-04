@@ -6,8 +6,8 @@ from . import constants
 
 
 def source_directory_path(instance, filename):
-    return 'user/{0}/problem/{1}/{2}'.format(instance.user.pk,
-                                             instance.problem.pk, filename)
+    return 'user/{0}/submission/{1}/{2}'.format(instance.user.pk,
+                                                instance.pk, filename)
 
 
 class SubmissionError(models.Model):
@@ -24,3 +24,4 @@ class Submission(models.Model):
     error = models.OneToOneField(SubmissionError, null=True)
     language = models.IntegerField(choices=constants.Language.CHOICES)
     datetime = models.DateTimeField(default=timezone.now)
+    source_output = models.TextField(null=True)
