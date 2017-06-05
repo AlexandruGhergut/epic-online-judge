@@ -22,6 +22,14 @@ class ProblemForm(forms.ModelForm):
                     css_class='form-control',
                     ),
                 Field(
+                    'input_description',
+                    css_class='form-control',
+                ),
+                Field(
+                    'output_description',
+                    css_class='form-control',
+                ),
+                Field(
                     'publish_datetime',
                     css_class='form-control datetime-field',
                     ),
@@ -50,6 +58,11 @@ class ProblemForm(forms.ModelForm):
     class Meta:
         model = Problem
         exclude = ['user']
+
+        widgets = {
+            'sample_input': forms.Textarea(attrs={'rows': 5}),
+            'sample_output': forms.Textarea(attrs={'rows': 5}),
+        }
 
 
 class TestCaseForm(forms.ModelForm):

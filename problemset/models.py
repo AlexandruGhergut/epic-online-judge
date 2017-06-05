@@ -30,6 +30,8 @@ class Problem(models.Model):
                              null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=64)
     statement = RichTextField()
+    input_description = RichTextField()
+    output_description = RichTextField()
     publish_datetime = models.DateTimeField(default=timezone.now)
     sample_input = models.CharField(max_length=128)
     sample_output = models.CharField(max_length=128)

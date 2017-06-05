@@ -198,3 +198,9 @@ if not CELERY_BROKER_URL:
         hostname=MQ_HOST,
         vhost=MQ_VHOST,
     )
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'height': 200,
+    },
+}
