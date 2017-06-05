@@ -6,6 +6,10 @@
     <script>
         $(document).ready(function() {
             $(".datetime-field").flatpickr({ enableTime: true });
+
+            $('.tags-field').tokenize2({
+                dataSource: '/problemset/problem/tag'
+            });
         });
     </script>
 {% endblock %}
@@ -14,6 +18,7 @@
     <form method="post" action="{% url 'problemset:create_problem' %}" enctype="multipart/form-data">
         {% crispy form %}
         {% crispy test_case_form %}
+
         <div style="padding-top:10px">
             <input class="btn btn-primary btn-md" type="submit" value="Create problem">
         </div>

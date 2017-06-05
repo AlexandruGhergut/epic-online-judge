@@ -26,6 +26,10 @@ class ProblemForm(forms.ModelForm):
                     css_class='form-control datetime-field',
                     ),
                 Field(
+                    'tags',
+                    css_class='tags-field',
+                ),
+                Field(
                     'sample_input',
                     css_class='form-control',
                     ),

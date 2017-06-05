@@ -21,6 +21,9 @@ def testcase_directory_path(instance, filename):
 class Tag(models.Model):
     name = models.CharField(max_length=32, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Problem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -32,7 +35,7 @@ class Problem(models.Model):
     sample_output = models.CharField(max_length=128)
     solution_source_file = models.FileField(upload_to=solution_directory_path)
     solution_language = models.IntegerField(choices=constants.Language.CHOICES)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
 
 
 class TestCase(models.Model):
