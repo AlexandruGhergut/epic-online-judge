@@ -26,9 +26,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'NO_SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['epic-onlinejudge.azurewebsites.net',
+ALLOWED_HOSTS = ['epic-onlinejudge-cyp3u800.cloudapp.net',
                  '127.0.0.1',
-                 'localhost',]
+                 'localhost']
 
 
 # Application definition
