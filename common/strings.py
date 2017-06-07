@@ -11,3 +11,5 @@ PASSWORD_RESET_TOKEN_INVALID =\
 PASSWORD_RESET_SUCCESSFULL = 'Password changed successfully'
 
 AUTH_TOKEN_INVALID = 'Invalid token'
+
+PERMISSIONS_MISSING = 'You lack required permissions'

@@ -4,10 +4,11 @@
     <div class="text-center">
         <h2>Problemset</h2>
     </div>
-
-    <form action="{% url 'problemset:create_problem' %}">
-        <input class="btn btn-primary btn-md" type="submit" value="Create problem">
-    </form>
+    {% if perms.problemset.can_add_problem %}
+        <form action="{% url 'problemset:create_problem' %}">
+            <input class="btn btn-primary btn-md" type="submit" value="Create problem">
+        </form>
+    {% endif %}
 
     <div class="table-responsive">
         <table class="table table-hover table-text-center">

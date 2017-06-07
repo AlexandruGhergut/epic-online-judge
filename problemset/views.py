@@ -1,21 +1,25 @@
-import json
 from django.db.models.functions import Now
 from django.views import View
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
+from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from core.forms import SubmissionForm
+from common import strings
 from .forms import ProblemForm, TestCaseForm
 from .models import Problem, Tag
 from .tasks import judge_problem_solution
 
 
-class CreateProblemView(LoginRequiredMixin, CreateView):
+class CreateProblemView(LoginRequiredMixin, PermissionRequiredMixin,
+                        CreateView):
     form_class = ProblemForm
     template_name = "problemset/create_problem.html"
     success_url = '/'
+    permission_required = 'problemset.can_add_problem'
 
     def get(self, request, *args, **kwargs):
         self.object = None
@@ -56,6 +60,10 @@ class CreateProblemView(LoginRequiredMixin, CreateView):
             self.get_context_data(form=form,
                                   test_case_form=test_case_form)
         )
+
+    def handle_no_permission(self):
+        messages.error(self.request, strings.PERMISSIONS_MISSING)
+        return super(CreateProblemView, self).handle_no_permission()
 
 
 class ListProblemsView(ListView):
