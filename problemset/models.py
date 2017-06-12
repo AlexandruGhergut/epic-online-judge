@@ -39,8 +39,14 @@ class Problem(models.Model):
     solution_language = models.IntegerField(choices=constants.Language.CHOICES)
     tags = models.ManyToManyField(Tag, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class TestCase(models.Model):
     problem = models.OneToOneField(Problem, on_delete=models.CASCADE)
     input_data_file = models.FileField(upload_to=testcase_directory_path)
     output = models.TextField(null=True)
+
+    def __str__(self):
+        return '{0}->{1}'.format(self.pk, self.problem.title)

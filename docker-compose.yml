@@ -3,7 +3,6 @@ version: "3"
 services:
     db:
         image: postgres:9.6.2
-        hostname: db
         env_file:
             - .docker/env/postgres.${APP_ENV}.env
         ports:
@@ -12,7 +11,6 @@ services:
             - network1
 
     django:
-        container_name: django1
         build:
             context: .
             dockerfile: ./.docker/django.dockerfile
