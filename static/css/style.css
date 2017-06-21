@@ -95,11 +95,34 @@
   }
 }
 
-#content {
-    margin-left: 10%;
-    margin-right: 10%;
-}
-
 .table-text-center td, .table-text-center th {
     text-align: center;
+}
+
+.center_div{
+    margin: 0 auto;
+    width:80% /* value of your choice which suits your alignment */
+}
+
+.center {
+    text-align:center;
+}
+
+.center form {
+    display:inline-block;
+}
+
+.post {
+    display: inline-block;
+    border: 2px solid black;
+}
+
+.submission_passed {
+    font-weight: bold;
+    color: green;
+}
+
+.submission_failed {
+    font-weight: bold;
+    color: red;
 }

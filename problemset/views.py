@@ -66,10 +66,26 @@ class CreateProblemView(LoginRequiredMixin, PermissionRequiredMixin,
         return super(CreateProblemView, self).handle_no_permission()
 
 
+# class ListProblemsView(ListView):
+#     template_name = 'problemset/list_problems.html'
+#     queryset = Problem.objects.filter(publish_datetime__lte=Now()) \
+#         .order_by('-publish_datetime')
+
+
 class ListProblemsView(ListView):
+    model = Problem
     template_name = 'problemset/list_problems.html'
-    queryset = Problem.objects.filter(publish_datetime__lte=Now()) \
-        .order_by('-publish_datetime')
+
+    def get_queryset(self):
+        fields = ('tags',)
+        query_dict = {}
+        for field in fields:
+            value = self.request.GET.get(field)
+            if value:
+                query_dict[field] = value
+
+        return Problem.objects.filter(**query_dict)\
+            .order_by('-publish_datetime')
 
 
 class DetailProblemView(DetailView):

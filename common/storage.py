@@ -52,3 +52,6 @@ class AzureStorage(Storage):
             if name == blob.name:
                 return True
         return False
+
+    def url(self, name):
+        return self.name

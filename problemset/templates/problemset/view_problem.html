@@ -6,35 +6,37 @@
         <h2>{{ object.title }}</h2>
     </div>
 
-    <div>
-        <p>{{ object.statement|safe }}</p>
-    </div>
-
-    <div>
-        <h3>Input</h3>
-        <p>{{ object.input_description|safe }}</p>
-    </div>
-
-    <div>
-        <h3>Output</h3>
-        <p>{{ object.output_description|safe }}</p>
-    <div>
-        <h3>Example</h3>
-
+    <div class="col-md-8">
         <div>
-            <h4>Input</h4>
-            <pre>{{ object.sample_input }}</pre>
+            <p>{{ object.statement|safe }}</p>
         </div>
 
         <div>
-            <h4>Output</h4>
-            <pre>{{ object.sample_output }}</pre>
+            <h3>Input</h3>
+            <p>{{ object.input_description|safe }}</p>
         </div>
-    </div>
 
-    {% if request.user.is_authenticated %}
-        <form method="post" action="{% url 'core:submit_source' object.pk %}" enctype="multipart/form-data">
-            {% crispy submission_form %}
-        </form>
-    {% endif %}
+        <div>
+            <h3>Output</h3>
+            <p>{{ object.output_description|safe }}</p>
+        <div>
+            <h3>Example</h3>
+
+            <div>
+                <h4>Input</h4>
+                <pre>{{ object.sample_input }}</pre>
+            </div>
+
+            <div>
+                <h4>Output</h4>
+                <pre>{{ object.sample_output }}</pre>
+            </div>
+        </div>
+
+        {% if request.user.is_authenticated %}
+            <form method="post" action="{% url 'core:submit_source' object.pk %}" enctype="multipart/form-data">
+                {% crispy submission_form %}
+            </form>
+        {% endif %}
+    </div>
 {% endblock %}

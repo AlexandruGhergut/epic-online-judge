@@ -4,6 +4,7 @@ from django.views.generic.list import ListView
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from blog.models import Post
 from .models import Submission
 from problemset.models import Problem
 from .forms import SubmissionForm
@@ -12,7 +13,10 @@ from .tasks import judge_submission
 
 class IndexView(View):
     def get(self, request):
-        return render(request, 'core/index.html')
+        posts = Post.objects.filter(on_homepage=True)
+
+        context = {'posts': posts}
+        return render(request, 'core/index.html', context)
 
 
 class ListSubmissionView(ListView):

@@ -34,7 +34,18 @@
                                 {{ submission.problem.title }}
                             </a>
                         </td>
-                        <td class="submission_status">{{ submission.get_status_display }}</td>
+                        <td class="submission_status">
+                            {% with current_status=submission.get_status_display %}
+                                {% if current_status == 'Pending' %}
+                                    {{ current_status }} <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                                {% elif current_status == 'Tests passed' %}
+                                    <span class="submission_passed">{{ current_status }}</span>
+                                {% elif current_status == 'Error' or current_status == 'Wrong answer' %}
+                                    <span class="submission_failed">{{ current_status }}</span>
+                                {% endif %}
+                            {% endwith %}
+
+                        </td>
                         <td>
                             <a href="{% url 'core:view_source' submission.pk %}">
                                 View source

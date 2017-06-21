@@ -11,12 +11,13 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class ="content">
+    <div class ="col-md-4"></div>
+    <div class ="col-md-4">
+        <form method="POST" action="{% url 'authentication:login' %}" class="form-horizontal">
             {% crispy form %}
             <hr/>
             <strong> Or sign in with:</strong>
             <div class="g-signin2" data-onsuccess="onGoogleSignIn"></div>
-        </div>
+        </form>
     </div>
 {% endblock %}

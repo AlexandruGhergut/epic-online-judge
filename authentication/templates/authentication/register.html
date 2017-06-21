@@ -8,8 +8,12 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'authentication:register' %}" method="post">
-    {% csrf_token %}
-    {% crispy form %}
-</form>
+<div class="col-md-4"></div>
+<div class="col-md-4">
+    <form action="{% url 'authentication:register' %}" method="post" class="form-horizontal">
+        {% csrf_token %}
+        {% crispy form %}
+    </form>
+</div>
+<div class="col-md-4"></div>
 {% endblock %}

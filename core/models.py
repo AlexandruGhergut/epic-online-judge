@@ -25,3 +25,6 @@ class Submission(models.Model):
     language = models.IntegerField(choices=constants.Language.CHOICES)
     datetime = models.DateTimeField(default=timezone.now)
     source_output = models.TextField(null=True)
+
+    def __str__(self):
+        return '(' + str(self.pk) + ', ' + str(self.user) + ')'

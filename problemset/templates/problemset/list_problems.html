@@ -4,32 +4,37 @@
     <div class="text-center">
         <h2>Problemset</h2>
     </div>
-    {% if perms.problemset.can_add_problem %}
-        <form action="{% url 'problemset:create_problem' %}">
-            <input class="btn btn-primary btn-md" type="submit" value="Create problem">
-        </form>
-    {% endif %}
 
-    <div class="table-responsive">
-        <table class="table table-hover table-text-center">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                <tr>
-            </thead>
-            {% for problem in object_list %}
-                <tr>
-                    <td>{{ problem.pk }}</td>
-                    <td>
-                        <a href="{% url 'problemset:view_problem' problem.pk %}">
-                            {{ problem.title }}
-                        </a>
-                    </td>
-                    <td>{{ problem.user }}</td>
-                </tr>
-            {% endfor %}
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        {% if perms.problemset.can_add_problem %}
+            <form action="{% url 'problemset:create_problem' %}">
+                <input class="btn btn-primary btn-md" type="submit" value="Create problem">
+            </form>
+        {% endif %}
+
+        <div class="table-responsive">
+            <table class="table table-hover table-text-center">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Tags</th>
+                    <tr>
+                </thead>
+                {% for problem in object_list %}
+                    <tr>
+                        <td>{{ problem.pk }}</td>
+                        <td>
+                            <a href="{% url 'problemset:view_problem' problem.pk %}">
+                                {{ problem.title }}
+                            </a>
+                        </td>
+                        <td>{{ problem.user }}</td>
+                        <td> {% for tag in problem.tags.all %} <a href="{% url 'problemset:list_problems' %}?tags={{ tag.pk }}">{{tag.name}}|</a> {% endfor %}</td>
+                    </tr>
+                {% endfor %}
+            </div>
         </div>
-    </div>
 {% endblock %}
