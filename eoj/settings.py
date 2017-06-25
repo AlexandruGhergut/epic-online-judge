@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['epic-onlinejudge-cyp3u800.cloudapp.net',
 # Application definition
 
 INSTALLED_APPS = [
+    'contest.apps.ContestConfig',
     'problemset.apps.ProblemsetConfig',
     'common.apps.CommonConfig',
     'core.apps.CoreConfig',

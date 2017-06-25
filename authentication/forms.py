@@ -16,7 +16,6 @@ class RegisterForm(UserCreationForm):
     email = \
         forms.EmailField(max_length=256,
                          help_text='Required. Enter a valid email address.')
-    timezone = TimeZoneFormField()
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
@@ -215,6 +214,10 @@ class ChangeUsernameForm(forms.ModelForm):
                     default='',
                     css_class='form-control',
                     ),
+                Field(
+                    'timezone',
+                    css_class='form-control',
+                ),
                 ButtonHolder(
                     Submit('submit', 'Submit'),
                 ),
@@ -224,4 +227,4 @@ class ChangeUsernameForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username',)
+        fields = ('username', 'timezone')
