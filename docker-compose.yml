@@ -23,6 +23,8 @@ services:
         working_dir: /var/www
         depends_on:
           - "db"
+          - "rabbitmq"
+          - "dispatcher"
         command:
             bash -c ".docker/scripts/wait-for-postgres.sh &&
                      python manage.py makemigrations &&
@@ -43,19 +45,36 @@ services:
         networks:
             - network1
 
-    worker:
+    dispatcher:
         build:
             context: .
-            dockerfile: ./.docker/django.dockerfile
+            dockerfile: ./.docker/dispatcher.dockerfile
         command: celery -A eoj worker -l info
         env_file:
             .docker/env/django.${APP_ENV}.env
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
         depends_on:
             - rabbitmq
         networks:
             - network1
 
+    worker:
+        build:
+            context: .
+            dockerfile: ./.docker/django.dockerfile
+        command: python manage.py judge_submission
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        env_file:
+            .docker/env/django.${APP_ENV}.env
+        networks:
+            - network1
+            - eoj_network1
+
 
 networks:
     network1:
         driver: bridge
+    eoj_network1:
+        external: true

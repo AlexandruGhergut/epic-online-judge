@@ -8,7 +8,7 @@ from blog.models import Post
 from .models import Submission
 from problemset.models import Problem
 from .forms import SubmissionForm
-from .tasks import judge_submission
+from .tasks import dispatch_submission
 
 
 class IndexView(View):
@@ -71,7 +71,7 @@ class SourceSubmitView(View):
                 get_object_or_404(Problem, pk=pk)
             submission.save()
 
-            judge_submission.delay(submission.pk)
+            dispatch_submission.delay(submission.pk)
             return HttpResponseRedirect('{0}?user={1}&problem={2}'.format(
                 reverse('core:list_submissions'),
                 request.user.pk,

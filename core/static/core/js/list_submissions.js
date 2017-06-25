@@ -18,7 +18,7 @@ $(document).ready(function() {
                         if (result[current_id] != 'Pending')
                             pending_status_tds[i].parentElement.classList.remove('pending');
                         if (result[current_id] == 'Pending')
-                            pending_status_tds[i].innerHTML = result_current[id] + '<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>';
+                            pending_status_tds[i].innerHTML = result[current_id] + '<i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>';
                         else if (result[current_id] == 'Tests passed')
                             pending_status_tds[i].innerHTML = '<span class="submission_passed">' + result[current_id] + '</span>';
                         else if (result[current_id] == 'Error' || result[current_id] == 'Wrong answer')

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load tz %}
 
 {% block head %}
     <script src="{% static 'core/js/list_submissions.js' %}"></script>
@@ -51,7 +52,9 @@
                                 View source
                             </a>
                         </td>
-                        <td>{{ submission.datetime }}</td>
+                        {% timezone request.user.timezone %}
+                            <td>{{ submission.datetime }}</td>
+                        {% endtimezone %}
                     </tr>
                 {% endfor %}
             </tbody>
