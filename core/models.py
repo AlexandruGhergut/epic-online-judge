@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from problemset.models import Problem
+from contest.models import Contest
 from . import constants
 
 
@@ -25,6 +26,7 @@ class Submission(models.Model):
     language = models.IntegerField(choices=constants.Language.CHOICES)
     datetime = models.DateTimeField(default=timezone.now)
     source_output = models.TextField(null=True)
+    contest = models.ForeignKey(Contest, default=None, null=True, blank=True)
 
     def __str__(self):
         return '(' + str(self.pk) + ', ' + str(self.user) + ')'

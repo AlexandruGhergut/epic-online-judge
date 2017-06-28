@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^problem/(?P<pk>[0-9]+)/edit/$', views.UpdateProblemView.as_view(),
         name='edit_problem'),
     url(r'^problem/tag/$', views.AutocompleteTagsView.as_view()),
+    url(r'^problem/autocomplete/$', views.AutocompleteProblemsView.as_view(),
+        name='autocomplete_problems'),
 ]

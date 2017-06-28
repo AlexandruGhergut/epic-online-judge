@@ -28,7 +28,7 @@ class Tag(models.Model):
 class Problem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              null=True, on_delete=models.SET_NULL)
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=64, unique=True)
     statement = RichTextField()
     input_description = RichTextField()
     output_description = RichTextField()

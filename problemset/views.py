@@ -178,3 +178,15 @@ class AutocompleteTagsView(View):
             response.append({'text': tag.name, 'value': tag.pk})
 
         return JsonResponse(response, safe=False)
+
+
+class AutocompleteProblemsView(View):
+    def get(self, request):
+        prefix = request.GET['search']
+        problems = Problem.objects.filter(title__startswith=prefix)
+
+        response = []
+        for problem in problems:
+            response.append({'text': problem.title, 'value': problem.pk})
+
+        return JsonResponse(response, safe=False)

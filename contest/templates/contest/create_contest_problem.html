@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block head %}
+    <script>
+        $(document).ready(function() {
+            $('.tags-field').tokenize2({
+                dataSource: '/problemset/problem/tag'
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-4">
+        <form method="post" action="{% url 'contest:create_problem' contest.pk %}" enctype="multipart/form-data">
+            {% crispy form %}
+            {% crispy test_case_form %}
+
+            <div style="padding-top:10px">
+                <input class="btn btn-primary btn-md" type="submit" value="Create problem">
+            </div>
+        </form>
+    </div>
+    <div class="col-md-8"></div>
+{% endblock %}

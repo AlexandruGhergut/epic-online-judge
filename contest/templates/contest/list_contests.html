@@ -3,12 +3,65 @@
 {% block content %}
     <h3> Upcoming contests </h3>
         {% if upcoming_contests %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Contest Title</th>
+                            <th>Author</th>
+                            <th>Countdown</th>
+                        <tr>
+                    </thead>
+
+                    <tbody>
+                        {% for contest in upcoming_contests %}
+                            <tr>
+                                <td>{{ contest.pk }}</td>
+                                <td>{{ contest.title }}</td>
+                                <td>{{ contest.author }}</td>
+                                <td><div id="contest-{{ contest.pk }}"></div><td>
+                                <script type="text/javascript">
+                                  $("#contest-{{ contest.pk }}")
+                                  .countdown("{{ contest.end_datetime|date:"m/d/Y" }}", function(event) {
+                                    $(this).text(
+                                      event.strftime('%D days %H:%M:%S')
+                                    );
+                                  });
+                                </script>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <p>There is no upcoming contests</p>
+            <p>There are no upcoming contests</p>
         {% endif %}
 
+    <h3> Past contests </h3>
         {% if past_contests %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Contest Title</th>
+                                <th>Author</th>
+                            <tr>
+                        </thead>
+
+                        <tbody>
+                            {% for contest in past_contests %}
+                                <tr>
+                                    <td>{{ contest.pk }}</td>
+                                    <td>{{ contest.title }}</td>
+                                    <td>{{ contest.author }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
         {% else %}
-            <p>There is no past contests</p>
+            <p>There are no past contests</p>
         {% endif %}
 {% endblock %}
