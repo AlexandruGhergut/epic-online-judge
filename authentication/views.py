@@ -15,7 +15,7 @@ from .forms import (RegisterForm, LoginForm, RequestPasswordResetForm,
                     ChangePasswordForm, ChangeUsernameForm)
 from .tokens import account_activation_token, password_reset_token
 from common import utils, strings
-
+from .backends import EmailOrUsernameBackend
 User = get_user_model()
 
 
@@ -65,7 +65,7 @@ class ConfirmEmailView(View):
                     user.is_active = True
                     user.profile.email_confirmed = True
                     user.save()
-                    login(request, user)
+                    login(request, user, backend='authentication.backends.EmailOrUsernameBackend')
                     messages.success(request,
                                      strings.REGISTRATION_EMAIL_CONFIRMED)
                     return redirect('core:index')

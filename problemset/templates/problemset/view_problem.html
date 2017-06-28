@@ -7,6 +7,14 @@
     </div>
 
     <div class="col-md-8">
+        {% if object.user == request.user %}
+            <div style="padding-top:10px">
+                <a href="{% url 'problemset:edit_problem' object.pk %}">
+                    <input class="btn btn-primary btn-md" type="submit" value="Edit problem">
+                </a>
+            </div>
+        {% endif %}
+        
         <div>
             <p>{{ object.statement|safe }}</p>
         </div>

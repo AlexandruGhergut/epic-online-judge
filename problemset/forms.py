@@ -65,6 +65,10 @@ class ProblemForm(forms.ModelForm):
         }
 
 
+class UpdateProblemForm(ProblemForm):
+    solution_source_file = forms.FileField(required=False)
+
+
 class TestCaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TestCaseForm, self).__init__(*args, **kwargs)
@@ -78,6 +82,10 @@ class TestCaseForm(forms.ModelForm):
     class Meta:
         model = TestCase
         exclude = ['problem', 'output']
+
+
+class UpdateTestCaseForm(TestCaseForm):
+    input_data_file = forms.FileField(required=False)
 
 
 TestCaseFormSet = formset_factory(TestCaseForm)

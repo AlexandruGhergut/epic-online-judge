@@ -42,6 +42,10 @@ class Problem(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('problemset:view_problem', kwargs={'pk': self.pk})
+
 
 class TestCase(models.Model):
     problem = models.OneToOneField(Problem, on_delete=models.CASCADE)

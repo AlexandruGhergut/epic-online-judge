@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^', include('core.urls')),
     url(r'^', include('authentication.urls')),
     url(r'^problemset/', include('problemset.urls')),
+    url(r'^contest/', include('contest.urls')),
     url(r'^blog/', include('blog.urls')),
     url(r'^admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

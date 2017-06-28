@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3> Upcoming contests </h3>
+        {% if upcoming_contests %}
+        {% else %}
+            <p>There is no upcoming contests</p>
+        {% endif %}
+
+        {% if past_contests %}
+        {% else %}
+            <p>There is no past contests</p>
+        {% endif %}
+{% endblock %}
