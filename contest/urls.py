@@ -10,4 +10,6 @@ urlpatterns = [
         name='view_contest'),
     url(r'^(?P<pk>[0-9]+)/create_problem/$',
         views.CreateContestProblemView.as_view(), name='create_problem'),
+    url(r'^(?P<contest_pk>[0-9]+)/problem/(?P<pk>[0-9]+)/$',
+        views.DetailContestProblemView.as_view(), name='view_problem')
 ]

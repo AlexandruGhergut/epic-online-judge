@@ -5,28 +5,47 @@
         <h2>{{ object.title }}</h2>
     </div>
 
-    <input class="btn btn-primary btn-md" type="submit" value="Add new problem">
+    <ul class="nav nav-pills">
+      <li role="presentation" class="active"><a href="#">Problem list</a></li>
+      <li role="presentation"><a href="#">Standings</a></li>
+    </ul>
 
-    {% if object.problems.all %}
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Problem Title</th>
-                    <tr>
-                </thead>
+    <div class="col-md-8">
+        <h3>Start time: {{ object.start_datetime }}</h3>
+        <h3>End time: {{ object.end_datetime }}</h3>
+        <a href="{% url 'contest:create_problem' object.pk %}">
+            <input class="btn btn-primary btn-md" type="submit" value="Add new problem">
+        </a>
 
-                <tbody>
-                    {% for problem in object.problems.all %}
+        {% if object.problems.all %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>{{ problem.pk }}</td>
-                            <td>{{ problem.title }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                            <th>#</th>
+                            <th>Problem Title</th>
+                        <tr>
+                    </thead>
+
+                    <tbody>
+                        {% for problem in object.problems.all %}
+                            <tr>
+                                <td>{{ problem.pk }}</td>
+                                <td>
+                                    <a href="{% url 'contest:view_problem' contest_pk=object.pk pk=problem.pk %}">
+                                        {{ problem.title }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+        <div>
+            <p> No problems have been added to this contest.</p>
         </div>
-    {% endif %}
+        {% endif %}
+    </div>
 
 {% endblock %}

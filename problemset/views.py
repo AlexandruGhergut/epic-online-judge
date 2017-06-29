@@ -1,4 +1,3 @@
-from django.db.models.functions import Now
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView

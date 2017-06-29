@@ -6,32 +6,39 @@ from django.contrib.auth.mixins import (LoginRequiredMixin,
 from django.views.generic.edit import CreateView
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
-from problemset.views import CreateProblemView
 from problemset.forms import TestCaseForm
 from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic.detail import DetailView
 from common import strings
 from .models import Contest
 from .forms import ContestForm, ContestProblemForm
+from core.forms import SubmissionForm
+from problemset.models import Problem
 from problemset.tasks import judge_problem_solution
 
 
 class ListContestsView(View):
     def get(self, request):
+        time = timezone.now()
+        active_contests = Contest.objects\
+            .filter(start_datetime__lte=time).filter(end_datetime__gte=time)
         upcoming_contests = Contest.objects\
-            .filter(start_datetime__gt=timezone.now())
+            .filter(start_datetime__gt=time)
         past_contests = Contest.objects\
-            .filter(end_datetime__lt=timezone.now())
+            .filter(end_datetime__lt=time)
 
         context = {'upcoming_contests': upcoming_contests,
-                   'past_contests': past_contests}
+                   'past_contests': past_contests,
+                   'active_contests': active_contests,
+                   'current_datetime': time}
         return render(request, 'contest/list_contests.html', context)
 
 
 class CreateContestView(LoginRequiredMixin, CreateView):
     form_class = ContestForm
     template_name = "contest/create_contest.html"
-    success_url = '/'
+    success_url = reverse_lazy('contest:list_contests')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -99,3 +106,22 @@ class CreateContestProblemView(LoginRequiredMixin, PermissionRequiredMixin,
     def handle_no_permission(self):
         messages.error(self.request, strings.PERMISSIONS_MISSING)
         return super(CreateContestProblemView, self).handle_no_permission()
+
+
+class DetailContestProblemView(DetailView):
+    model = Problem
+    template_name = 'contest/view_contest_problem.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailContestProblemView, self)\
+            .get_context_data(**kwargs)
+        submission_form = SubmissionForm()
+        context['submission_form'] = submission_form
+        contest_pk = self.kwargs['contest_pk']
+        contest = get_object_or_404(Contest, pk=contest_pk)
+        if timezone.now() <= contest.end_datetime:
+            context['is_contest_submission'] = True
+        else:
+            context['is_contest_submission'] = False
+        context['contest'] = contest
+        return context

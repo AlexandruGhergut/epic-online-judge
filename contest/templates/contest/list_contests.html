@@ -1,6 +1,58 @@
 {% extends "base.html" %}
+{% load tz %}
 
 {% block content %}
+    {% if perms.problemset.can_add_problem %}
+        <form action="{% url 'contest:create_contest' %}">
+            <input class="btn btn-primary btn-md" type="submit" value="Create contest">
+        </form>
+    {% endif %}
+
+    <h3> Active contests </h3>
+        {% if active_contests %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Contest Title</th>
+                                <th>Author</th>
+                                <th>Countdown until end</td>
+                            <tr>
+                        </thead>
+
+                        <tbody>
+                            {% for contest in active_contests %}
+                                {% if contest.problems.all or request.user == contest.author %}
+                                    <tr>
+                                        <td>{{ contest.pk }}</td>
+                                        <td>
+                                            <a href="{% url 'contest:view_contest' contest.pk %}">
+                                                {{ contest.title }}
+                                            </a>
+                                        </td>
+                                        <td>{{ contest.author }}</td>
+                                        {% timezone request.user.timezone %}
+                                            <td><div id="contest-active-{{ contest.pk }}"></div><td>
+                                            <script type="text/javascript">
+                                              $("#contest-active-{{ contest.pk }}")
+                                              .countdown("{{ contest.end_datetime|date:"m/d/Y H:m:s" }}", function(event) {
+                                                $(this).text(
+                                                  event.strftime('%D days %H:%M:%S')
+                                                );
+                                              });
+                                              </script>
+                                        {% endtimezone %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        {% else %}
+            <p>There are no active contests</p>
+        {% endif %}
+
     <h3> Upcoming contests </h3>
         {% if upcoming_contests %}
             <div class="table-responsive">
@@ -10,26 +62,38 @@
                             <th>#</th>
                             <th>Contest Title</th>
                             <th>Author</th>
-                            <th>Countdown</th>
+                            <th>Countdown until start</th>
                         <tr>
                     </thead>
 
                     <tbody>
                         {% for contest in upcoming_contests %}
-                            <tr>
-                                <td>{{ contest.pk }}</td>
-                                <td>{{ contest.title }}</td>
-                                <td>{{ contest.author }}</td>
-                                <td><div id="contest-{{ contest.pk }}"></div><td>
-                                <script type="text/javascript">
-                                  $("#contest-{{ contest.pk }}")
-                                  .countdown("{{ contest.end_datetime|date:"m/d/Y" }}", function(event) {
-                                    $(this).text(
-                                      event.strftime('%D days %H:%M:%S')
-                                    );
-                                  });
-                                </script>
-                            </tr>
+                            {% if contest.problems.all or contest.author == request.user %}
+                                <tr>
+                                    <td>{{ contest.pk }}</td>
+                                    {% if request.user == contest.author %}
+                                        <td>
+                                            <a href="{% url 'contest:view_contest' contest.pk %}">
+                                                {{ contest.title }}
+                                            </a>
+                                        </td>
+                                    {% else %}
+                                        <td>{{ contest.title }}</td>
+                                    {% endif %}
+                                    <td>{{ contest.author }}</td>
+                                    {% timezone request.user.timezone %}
+                                        <td><div id="contest-upcoming-{{ contest.pk }}"></div><td>
+                                        <script type="text/javascript">
+                                          $("#contest-upcoming-{{ contest.pk }}")
+                                          .countdown("{{ contest.start_datetime|date:"m/d/Y H:m:s" }}", function(event) {
+                                            $(this).text(
+                                              event.strftime('%D days %H:%M:%S')
+                                            );
+                                          });
+                                          </script>
+                                    {% endtimezone %}
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -52,11 +116,17 @@
 
                         <tbody>
                             {% for contest in past_contests %}
-                                <tr>
-                                    <td>{{ contest.pk }}</td>
-                                    <td>{{ contest.title }}</td>
-                                    <td>{{ contest.author }}</td>
-                                </tr>
+                                {% if contest.problems.all or request.user == contest.author %}
+                                    <tr>
+                                        <td>{{ contest.pk }}</td>
+                                        <td>
+                                            <a href="{% url 'contest:view_contest' contest.pk %}">
+                                                {{ contest.title }}
+                                            </a>
+                                        </td>
+                                        <td>{{ contest.author }}</td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>

@@ -11,5 +11,7 @@ urlpatterns = [
         name='view_source'),
     url(r'^submission/(?P<pk>[0-9]+)/submit/$',
         views.SourceSubmitView.as_view(), name='submit_source'),
+    url(r'^submission/(?P<pk>[0-9]+)/contest/(?P<contest_pk>[0-9]+)/submit/$',
+        views.ContestSourceSubmitView.as_view(), name='submit_contest_source'),
     url(r'^submission/status/$', views.GetSubmissionStatusView.as_view()),
 ]

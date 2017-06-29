@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="text-center">
+        <h2>{{ object.title }}</h2>
+    </div>
+
+    <div class="col-md-8">
+        {% if object.user == request.user %}
+            <div style="padding-top:10px">
+                <a href="{% url 'problemset:edit_problem' object.pk %}">
+                    <input class="btn btn-primary btn-md" type="submit" value="Edit problem">
+                </a>
+            </div>
+        {% endif %}
+
+        <div>
+            <p>{{ object.statement|safe }}</p>
+        </div>
+
+        <div>
+            <h3>Input</h3>
+            <p>{{ object.input_description|safe }}</p>
+        </div>
+
+        <div>
+            <h3>Output</h3>
+            <p>{{ object.output_description|safe }}</p>
+        <div>
+            <h3>Example</h3>
+
+            <div>
+                <h4>Input</h4>
+                <pre>{{ object.sample_input }}</pre>
+            </div>
+
+            <div>
+                <h4>Output</h4>
+                <pre>{{ object.sample_output }}</pre>
+            </div>
+        </div>
+
+        {% if request.user.is_authenticated %}
+            {% if is_contest_submission %}
+                <form method="post" action="{% url 'core:submit_contest_source' pk=object.pk contest_pk=contest.pk%}" enctype="multipart/form-data">
+                    {% crispy submission_form %}
+                </form>
+            {% else %}
+                <form method="post" action="{% url 'core:submit_source' object.pk %}" enctype="multipart/form-data">
+                    {% crispy submission_form %}
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

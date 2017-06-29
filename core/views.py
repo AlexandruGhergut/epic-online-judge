@@ -7,6 +7,7 @@ from django.urls import reverse
 from blog.models import Post
 from .models import Submission
 from problemset.models import Problem
+from contest.models import Contest
 from .forms import SubmissionForm
 from .tasks import dispatch_submission
 
@@ -69,6 +70,27 @@ class SourceSubmitView(View):
             submission.user = request.user
             submission.problem = \
                 get_object_or_404(Problem, pk=pk)
+            submission.save()
+
+            dispatch_submission.delay(submission.pk)
+            return HttpResponseRedirect('{0}?user={1}&problem={2}'.format(
+                reverse('core:list_submissions'),
+                request.user.pk,
+                submission.problem.pk
+            ))
+
+
+class ContestSourceSubmitView(View):
+    def post(self, request, pk, contest_pk, *args, **kwargs):
+        form = SubmissionForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            submission = form.save(commit=False)
+            submission.user = request.user
+            submission.problem = \
+                get_object_or_404(Problem, pk=pk)
+            submission.contest = \
+                get_object_or_404(Contest, pk=contest_pk)
             submission.save()
 
             dispatch_submission.delay(submission.pk)

@@ -22,6 +22,7 @@
                     <th>Status</th>
                     <th></th>
                     <th>Date</th>
+                    <th>Contest</th>
                 <tr>
             </thead>
 
@@ -55,6 +56,13 @@
                         {% timezone request.user.timezone %}
                             <td>{{ submission.datetime }}</td>
                         {% endtimezone %}
+                        {% if submission.contest %}
+                        <td>
+                            <a href="{% url 'contest:view_contest' submission.contest.pk %}">
+                                {{ submission.contest }}
+                            </a>
+                        </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
