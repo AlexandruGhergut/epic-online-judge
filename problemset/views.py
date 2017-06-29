@@ -159,14 +159,17 @@ class ListProblemsView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListProblemsView, self).get_context_data(**kwargs)
-        passed_submissions = Submission.objects.filter(
-                status=constants.Status.TESTS_PASSED
-                )
-        solved_problems =\
-            Problem.objects.filter(
-                pk__in=passed_submissions.values('problem'))\
+
+        if self.request.user.is_authenticated:
+            passed_submissions = Submission.objects.filter(
+                    status=constants.Status.TESTS_PASSED,
+                    user=self.request.user
+                    )
+            solved_problems =\
+                Problem.objects.filter(
+                    pk__in=passed_submissions.values('problem'))\
                 .values_list('pk', flat=True)
-        context['solved_problems'] = solved_problems
+            context['solved_problems'] = solved_problems
         return context
 
 
