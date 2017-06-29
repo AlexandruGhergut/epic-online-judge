@@ -49,9 +49,11 @@
 
                         </td>
                         <td>
-                            <a href="{% url 'core:view_source' submission.pk %}">
-                                View source
-                            </a>
+                            {% if request.user == submission.user %}
+                                <a href="{% url 'core:view_source' submission.pk %}">
+                                    View source
+                                </a>
+                            {% endif %}
                         </td>
                         {% timezone request.user.timezone %}
                             <td>{{ submission.datetime }}</td>

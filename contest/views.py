@@ -14,6 +14,7 @@ from common import strings
 from .models import Contest
 from .forms import ContestForm, ContestProblemForm
 from core.forms import SubmissionForm
+from core.models import Submission
 from problemset.models import Problem
 from problemset.tasks import judge_problem_solution
 
@@ -125,3 +126,10 @@ class DetailContestProblemView(DetailView):
             context['is_contest_submission'] = False
         context['contest'] = contest
         return context
+
+# class StandingsView(View):
+#     def get(self, request, pk):
+#         contest = get_object_or_404(Contest, pk=pk)
+#         participants = Submission.objects.filter(contest=contest)\
+#             .distinct('user')
+#         for participant in participants:
