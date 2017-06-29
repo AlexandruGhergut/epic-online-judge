@@ -8,7 +8,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.shortcuts import redirect
+from core.models import Submission
 from core.forms import SubmissionForm
+from core import constants
 from common import strings
 from .forms import (ProblemForm, TestCaseForm, UpdateProblemForm,
                     UpdateTestCaseForm)
@@ -154,6 +156,18 @@ class ListProblemsView(ListView):
 
         return Problem.objects.filter(publish_datetime__lte=timezone.now())\
             .filter(**query_dict).order_by('-publish_datetime')
+
+    def get_context_data(self, **kwargs):
+        context = super(ListProblemsView, self).get_context_data(**kwargs)
+        passed_submissions = Submission.objects.filter(
+                status=constants.Status.TESTS_PASSED
+                )
+        solved_problems =\
+            Problem.objects.filter(
+                pk__in=passed_submissions.values('problem'))\
+                .values_list('pk', flat=True)
+        context['solved_problems'] = solved_problems
+        return context
 
 
 class DetailProblemView(DetailView):

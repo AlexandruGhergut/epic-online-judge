@@ -28,6 +28,9 @@
                         <td>{{ problem.pk }}</td>
                         <td>
                             <a href="{% url 'problemset:view_problem' problem.pk %}">
+                                {% if problem.pk in solved_problems %}
+                                    <i class="fa fa-check" style="color:green" aria-hidden="true"></i>
+                                {% endif %}
                                 {{ problem.title }}
                             </a>
                         </td>
